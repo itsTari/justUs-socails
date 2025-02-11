@@ -3,6 +3,8 @@ import SignInForm from "./_auth/forms/SignInForm"
 import SignUpForm from "./_auth/forms/SignUpForm"
 import Home from "./_root/pages/Home"
 import AuthLayout from "./_auth/AuthLayout"
+import { Toaster } from "@/components/ui/toaster"
+
 function App() {
   const router =createBrowserRouter(createRoutesFromElements(
     <Route>
@@ -16,6 +18,7 @@ function App() {
   return (
     <>
     <RouterProvider router={router}/>
+    <Toaster/>
     </>
   )
 }

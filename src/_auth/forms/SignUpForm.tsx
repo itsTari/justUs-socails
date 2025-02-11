@@ -4,19 +4,29 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { SignUpValidation } from "./Validation"
 import { FiLoader } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom"
+// import { createUserAccount } from "@/lib/appwrite/api"
+import { useToast } from "@/hooks/use-toast"
+import { useCreateUserAccount, useSignInAccount } from "@/lib/reactQuery/Queries"
+import { useUserContext } from "@/context/AuthContext"
 
 
 
-const SignUpValidation = z.object({
-    name: z.string().min(2, {message:'name Too short'}),
-    username: z.string().min(2, {message: 'username Too short'}).max(50),
-    email: z.string().email(),
-    password: z.string().min(8, {message: 'password must be at least 8 characters.'})
-  })
+
+
 
 const SignUpForm = () => {
-    const isLoading = true;
+    const { toast } = useToast()
+    const {checkAuthUser, isLoading:isUserLoading}= useUserContext()
+    const navigate = useNavigate()
+    // const isLoading = false;
+
+    const {mutateAsync:createUserAccount, isPending:isCreatingUser} = useCreateUserAccount()
+
+    const {mutateAsync:signInAccount, isPending:isSigningIn} = useSignInAccount()
+
     const form = useForm<z.infer<typeof SignUpValidation>>({
         resolver: zodResolver(SignUpValidation),
         defaultValues: {
@@ -28,10 +38,26 @@ const SignUpForm = () => {
       })
      
       // 2. Define a submit handler.
-      function onSubmit(values: z.infer<typeof SignUpValidation>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+     async function onSubmit(values: z.infer<typeof SignUpValidation>) {
+         // creating our user account.
+        const newUser = await createUserAccount(values)
+        if(!newUser){
+          return  toast({title: "Sign up failed. please try again."})
+        }
+        // create a session 
+        const session = await signInAccount({email:values.email, password:values.password})
+        if(!session){
+          return toast({title:'Sign in failed. please try again.'})
+        }
+        // add to the user context 
+        const isLoggedIn = await checkAuthUser()
+        if(isLoggedIn){
+          form.reset()
+          // navigate to the home page
+          navigate('/')
+        }else{
+         return toast({title:'sign up failed. please try again'})
+        }
     }
 
   return (
@@ -93,10 +119,12 @@ const SignUpForm = () => {
             )}
         />
       <Button type="submit">
-        {isLoading? (
+        {isCreatingUser? (
             <div className="flex items-center gap-2"><FiLoader />Loading...</div>
         ):(<div>Sign up</div>)}
       </Button>
+      <p className="text-n-4 text-sm pt-2">Already have an account? 
+        <Link to='/sign-in' className="text-indigo-900 font-semibold ml-1">Log in</Link></p>
      </form>
      </div>
   </Form>
