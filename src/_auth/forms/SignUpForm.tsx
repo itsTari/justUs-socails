@@ -62,9 +62,10 @@ const SignUpForm = () => {
 
   return (
     <Form {...form}>
-        <div className="">
-            <div className="text-pink-400 tracking-tighter text-center">JustUsLogo</div>
+        <div className="flex flex-col items-center justify-center">
+            <div className="text-pink-400 tracking-tighter">JustUsLogo</div>
             <h5 className="h5">Create a new account</h5>
+            <p className="text-n-3 text-sm mt-2">Sign up for JustUs Socails.</p>
      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
         <FormField
             control={form.control}
@@ -123,7 +124,7 @@ const SignUpForm = () => {
             <div className="flex items-center gap-2"><FiLoader />Loading...</div>
         ):(<div>Sign up</div>)}
       </Button>
-      <p className="text-n-4 text-sm pt-2">Already have an account? 
+      <p className="text-n-4 text-sm pt-2 text-center">Already have an account? 
         <Link to='/sign-in' className="text-indigo-900 font-semibold ml-1">Log in</Link></p>
      </form>
      </div>

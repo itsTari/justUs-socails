@@ -1,7 +1,13 @@
-
+import Topbar from "@/components/ui/component/Topbar"
+import { Outlet } from "react-router-dom"
 const RootLayout = () => {
   return (
-    <div>RootLayout</div>
+    <div className="body">
+        <Topbar/>
+        <section>
+           <Outlet/>
+        </section>
+    </div>
   )
 }
 
