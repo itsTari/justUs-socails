@@ -1,11 +1,11 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
 import SignInForm from "./_auth/forms/SignInForm"
 import SignUpForm from "./_auth/forms/SignUpForm"
-import Home from "./_root/pages/Home"
 import AuthLayout from "./_auth/AuthLayout"
 import RootLayout from "./_root/RootLayout"
 import { Toaster } from "@/components/ui/toaster"
 import NotFound from "./components/ui/component/NotFound"
+import { AllUsers, CreatePost, EditPost, Home, LikedPost, Profile, Saved } from "./_root/pages"
 
 function App() {
   const router =createBrowserRouter(createRoutesFromElements(
@@ -16,6 +16,12 @@ function App() {
       </Route>
       <Route element={<RootLayout/>}>
         <Route index element={<Home/>}/>
+        <Route path="/saved" element={<Saved/>}/>
+        <Route path="/create-post" element={<CreatePost/>}/>
+        <Route path="/edit-post/:id" element={<EditPost/>}/>
+        <Route path='/liked'element={<LikedPost/>}/>
+        <Route path='/all-users'element={<AllUsers/>}/>
+        <Route path='/profile/:id/*'element={<Profile/>}/>
       </Route>
       <Route path="*" element={<NotFound/>}/>
     </Route>

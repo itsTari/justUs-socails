@@ -7,7 +7,7 @@ export type IContextType={
     checkAuthUser:()=>Promise<boolean>
 }
 export type INavLink ={
-    imgURL:string;
+    // imgURL:string;
     route:string;
     label:string;
 }
