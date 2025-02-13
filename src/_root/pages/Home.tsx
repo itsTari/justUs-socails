@@ -21,7 +21,7 @@ const Home = () => {
     }
   }
   return (
-    <section className="flex flex-col w-full items-center py-10">
+    <section className="flex flex-col w-full items-center">
         <div className="flex flex-col w-[80%] items-center ">
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center gap-3">

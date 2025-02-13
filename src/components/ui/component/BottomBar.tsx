@@ -1,20 +1,20 @@
 import { Link, useLocation } from "react-router-dom"
-import { CiHome } from "react-icons/ci";
-import { FaUserAlt } from "react-icons/fa";
-import { IoIosCreate } from "react-icons/io"
-import { FaRegBookmark } from "react-icons/fa6";
+import { bottomLinks } from "@/constants";
 
 const BottomBar = () => {
     const {pathname} = useLocation();
   return (
-    <>
-    </>
-    // <section className="flex w-full justify-between bg-n-11 px-6 py-1">
-    //         <Link to='/' className={`${pathname && 'bg-pink-500'} p-1 rounded-md bg-n-11 hover:bg-pink-500`}><CiHome  className="text-2xl"/></Link>
-    //         <Link to='/all-users' className={`${pathname && 'bg-pink-500'} bg-n-11 p-1 rounded-md hover:bg-pink-500`}><FaUserAlt className="text-2xl" /></Link>
-    //         <Link to='/saved' className={`${pathname  &&'bg-pink-500'} bg-n-11 p-1 rounded-md hover:bg-pink-500`}><FaRegBookmark className="text-2xl" /></Link>
-    //         <Link to='/create-post' className={`${pathname && 'bg-pink-500'} bg-n-11 p-1 rounded-md hover:bg-pink-500`}><IoIosCreate className="text-2xl" /></Link>
-    // </section>
+    <section className="w-full fixed bottom-0 md:hidden">
+        <ul className="flex justify-between px-4 bg-n-7 py-1">
+            {bottomLinks.map((icon, id)=>{
+                const isActive = pathname === icon.route
+                return <li key={id} >
+                    <Link to={icon.route}><img src={icon.icon} width={40} height={40} className={`${isActive ? 'bg-pink-500' : 'bg-n-5'} p-2 rounded-md`}/></Link>
+                </li>
+            })}
+        </ul>
+    </section>
+  
   )
 }
 

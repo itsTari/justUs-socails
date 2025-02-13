@@ -13,7 +13,7 @@ const Topbar = () => {
         if(isSuccess)navigate('/sign-in')
     },[isSuccess])
   return (
-    <header className=''>
+    <header>
         <div className='flex justify-between py-4 px-5'>
             <Link to='/' className='flex gap-3 items-center'>
                 <div className="text-pink-400 tracking-tighter">JustUsLogo</div>

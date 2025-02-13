@@ -21,3 +21,23 @@ export const links = [
     }
 
 ]
+
+export const bottomLinks = [
+    {
+        icon:'./public/assets/icons/home.png',
+        route:'/'
+    },
+    {
+        icon:'./public/assets/icons/group.png',
+        route:'/all-users' 
+    },
+
+    {
+        icon:'./public/assets/icons/bookmark-white.png',
+        route:'/saved'
+    },
+    {
+        icon:'./public/assets/icons/edit.png',
+        route:'/create-post'
+    }
+]
