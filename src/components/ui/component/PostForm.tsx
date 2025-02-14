@@ -6,25 +6,39 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../textarea"
 import FileUploader from "./FileUploader"
+import { PostValidation } from "@/_auth/forms/Validation"
+import { Models } from "appwrite"
+import { useUserContext } from "@/context/AuthContext"
+import { toast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
+import { useCreatePost } from "@/lib/reactQuery/Queries"
  
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+type PostFormProps ={
+    post?:Models.Document;
+}
 
-const PostForm = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+const PostForm = ({post}: PostFormProps) => {
+    const  {mutateAsync:createPost , isPending:isLoadingPost} = useCreatePost();
+    const {user} = useUserContext();
+    const navigate = useNavigate();
+
+    const form = useForm<z.infer<typeof PostValidation >>({
+        resolver: zodResolver(PostValidation ),
         defaultValues: {
-          username: "",
+          caption: post? post?.caption: '',
+          file:[],
+          tags:post ? post?.tags.join(','):''
         },
       })
      
       // 2. Define a submit handler.
-      function onSubmit(values: z.infer<typeof formSchema>) {
+      async function onSubmit(values: z.infer<typeof PostValidation >) {
         // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+            const newPost = await createPost({...values, userId:user.id,})
+            if(!newPost) {
+                toast({title:'please try again later'})
+            }
+            navigate('/')
         console.log(values)
       }
     
@@ -51,7 +65,7 @@ const PostForm = () => {
           <FormItem>
             <FormLabel className="body-1 text-n-3">Add photo</FormLabel>
             <FormControl>
-              <FileUploader/>
+              <FileUploader fieldChange={field.onChange} mediaUrl={post?.imageUrl}/>
             </FormControl>
             <FormMessage  />
           </FormItem>

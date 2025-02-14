@@ -17,3 +17,8 @@ export const useSignOut = () =>{
         mutationFn: () => signOutAccount()
     })
 }
+export const useCreatePost = () =>{
+    return useMutation({
+        mutationFn: () => CreatePost()
+    })
+}

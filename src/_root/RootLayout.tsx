@@ -5,7 +5,7 @@ const RootLayout = () => {
   return (
     <div className="body relative">
         <Topbar/>
-        <section className="h-[90vh] mt-10">
+        <section className=" py-14">
            <Outlet/>
         </section>
         <BottomBar/>
