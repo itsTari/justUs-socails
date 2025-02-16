@@ -36,7 +36,7 @@ export type IUpdateUser ={
 export type InewPost = {
     userId:string;
     caption:string;
-    file: File[];
+    file?: File[];
     // location?: string;
     tags?:string;
 }

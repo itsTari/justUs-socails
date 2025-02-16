@@ -1,7 +1,6 @@
 import { InewPost, INewUser } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
-import { error } from "console";
 
 export async function createUserAccount(user:INewUser){
     try{
@@ -52,16 +51,20 @@ export async function signOutAccount(){
         console.log(error)
     }
 }
-export async function createpost(post: InewPost){
+export async function createPost(post: InewPost){
     try {
+        const file = post.file?.[0]
+        if(!file) return
         // upload image to storage
-        const uploadedFile = await uploadFile(post.file[0])
+        const uploadedFile = await uploadFile(file)
         if(!uploadedFile) throw Error
-        const fileUrl = getFilePreview(uploadedFile.$id)
+        // else get fileUrl
+        const fileUrl = await getFilePreview(uploadedFile.$id)
         if(!fileUrl){
             deleteFile(uploadedFile.$id)
             throw Error
         }
+        console.log({fileUrl})
 
         const tags = post.tags?.replace(/ /g, '').split(',') || []
         // save post to db
@@ -104,4 +107,9 @@ export async function deleteFile(fileId:string){
     } catch (error) {
         console.log(error)
     }
+}
+export async function getRecentPosts(){
+    const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(10)])
+    if(!posts) throw Error
+    return posts
 }

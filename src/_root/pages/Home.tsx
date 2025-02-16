@@ -1,57 +1,46 @@
 import { useUserContext } from "@/context/AuthContext"
-import { PiDotsThreeOutlineLight } from "react-icons/pi";
 import { BiComment } from "react-icons/bi";
 import { PiShuffleAngularFill } from "react-icons/pi";
 import { BiLike } from "react-icons/bi";
 import { FaRegBookmark } from "react-icons/fa6";
 import { LuShare } from "react-icons/lu";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { links } from "@/constants";
-import { INavLink } from "@/types";
+import { useGetRecentPost } from "@/lib/reactQuery/Queries";
+import {InfinitySpin } from 'react-loader-spinner'
+import { Models } from "appwrite";
 const Home = () => {
   const {user} = useUserContext()
-  const [showBar, setShowBar] = useState(false)
-  const showModal = () => {
-    if(showBar){
-      setShowBar(false)
-    }else{
-      setShowBar(true)
-    }
-  }
+  const {data:posts, isPending:isPostLoading, isError:isErrorPost} = useGetRecentPost()
+  
   return (
-    <section className="flex flex-col w-full items-center">
-        <div className="flex flex-col w-[80%] items-center ">
-            <div className="flex justify-between items-center w-full">
+    <section className="flex flex-1">
+        <div className="flex flex-col flex-1 items-center gap-10 py-10 px-5 md:px-8 lg:p-14  ">
+            <div className="max-w-screen-sm flex flex-col items-center w-full gap-6 md:gap-9;">
+              <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] text-left w-full">Home Feed</h2>
               <div className="flex items-center gap-3">
-                <img src={user.imageUrl} className="h-8 w-8 rounded-full"/>
+                {isPostLoading && !posts ?(
+                  <InfinitySpin  width="180" color="green" />
+                ):(
+                  <ul className="flex flex-col flex-1 gap-9 w-full">
+                    {posts?.documents.map((post:Models.Document)=>(
+                      <li>{post.caption}</li>
+                    ))}
+                  </ul>
+                )}
+                {/* <img src={user.imageUrl} className="h-8 w-8 rounded-full"/>
                 <div>
                   <h4 className="h4">{user.name}</h4>
                   <p className="body-2 text-n-3">@{user.username}</p>
-                </div>
-              </div>
-              <div className="relative">
-                <PiDotsThreeOutlineLight className="text-2xl md:text-4xl cursor-pointer" onClick={showModal} />
-                    <div className={`${showBar ? 'flex': 'hidden'} bg-n-1 w-40 absolute right-1 p-2 flex-col items-start rounded-md gap-3 transition`}>
-                      {links.map((item: INavLink)=>(
-                        <Link to={item.route} className="text-n-8 mt-2 hover:text-n-7">{item.label}</Link>
-                      )
-                      )}
-                      <Button>delete post</Button>
-                    </div> 
+                </div> */}
               </div>
             </div>
-            <div className="w-full h-[50vh] mt-6 p-1">
-                post goes here
-            </div>
-            <div className="border-y border-n-5 flex justify-between my-4 py-2 px-4 text-2xl w-full">
+            
+            {/* <div className="border-y border-n-5 flex justify-between my-4 py-2 px-4 text-2xl w-full">
                 <BiComment/>
                 <PiShuffleAngularFill/>
                 <BiLike/>
                 <FaRegBookmark/>
                 <LuShare/>
-            </div>
+            </div> */}
         </div>
     </section>
   )
