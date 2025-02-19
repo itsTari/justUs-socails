@@ -74,7 +74,7 @@ const SignUpForm = () => {
              <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                <Input type="text" placeholder="enter your name" {...field} />
+                <Input className="bg-black" type="text" placeholder="enter your name" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>
@@ -87,7 +87,7 @@ const SignUpForm = () => {
              <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                <Input type="text" placeholder="enter a username" {...field} />
+                <Input className="bg-black" type="text" placeholder="enter a username" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>
@@ -100,7 +100,7 @@ const SignUpForm = () => {
              <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                <Input type="email" placeholder="@glory.com" {...field} />
+                <Input className="bg-black" type="email" placeholder="@glory.com" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>
@@ -113,7 +113,7 @@ const SignUpForm = () => {
              <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                <Input type="text" placeholder="********" {...field} />
+                <Input className="bg-black" type="text" placeholder="********" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>

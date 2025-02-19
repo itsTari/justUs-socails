@@ -24,19 +24,19 @@ const PostCard = ({post}: postCardProps) => {
                 </div>
 
             </div>
-            <Link to={`/edit-post/${post.$id}`} className={`${user.id !== post.creator.$id && 'hidden'}`}><img src="/assets/svg/edit.svg" alt='edit' className=" bg-white rounded-md"/></Link>
+            <Link to={`/edit-post/${post.$id}`} className={`${user.id !== post.creator.$id && 'hidden'}`}><img src="/assets/svg/edit.svg" alt='edit'/></Link>
         </div>
         <Link to={`/posts/${post.$id}`}>
             <div className="py-4">
                  <p>{post.caption}</p>
                  <ul>
                     {post.tags.map((tag:string)=>(
-                        <li key={tag} className="text-blue-400">#{tag}</li>
+                        <li key={tag} className="text-blue-400">{tag}</li>
                     ))}
                  </ul>
             </div>
             <div>
-                <img src={post.imageUrl} className="rounded-2xl"/>
+                <img src={post.imageUrl} className="rounded-2xl" />
             </div>
 
             <div className="flex justify-between items-start text-n-4 py-2">

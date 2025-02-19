@@ -35,6 +35,7 @@ const PostForm = ({post}: PostFormProps) => {
       async function onSubmit(values: z.infer<typeof PostValidation >) {
         // Do something with the form values.
             const newPost = await createPost({...values, userId:user.id,})
+            
             if(!newPost) {
                 toast({title:'please try again later'})
             }
@@ -78,7 +79,7 @@ const PostForm = ({post}: PostFormProps) => {
           <FormItem>
             <FormLabel className="body-1 text-n-3 ">Tags</FormLabel>
             <FormControl>
-                <Input type='text' className=' bg-n-7 border-none' placeholder="fun, learning, art, music" {...field} />
+                <Input type='text' className=' bg-n-7 border-none' placeholder="#fun, #learning, #art, #music" {...field} />
             </FormControl>
             <FormMessage  />
           </FormItem>
@@ -86,7 +87,7 @@ const PostForm = ({post}: PostFormProps) => {
         />
         <div className="flex gap-4 justify-end ">
         <Button type="button">cancel</Button>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isLoadingPost}>Submit</Button>
         </div>
         </form>
     </Form>

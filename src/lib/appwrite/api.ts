@@ -1,6 +1,9 @@
 import { InewPost, INewUser } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
+import { Trophy } from "lucide-react";
+import { useUserContext } from "@/context/AuthContext";
+import { useGetCurrentUser } from "../reactQuery/Queries";
 
 export async function createUserAccount(user:INewUser){
     try{
@@ -54,18 +57,22 @@ export async function signOutAccount(){
 }
 export async function createPost(post: InewPost){
     try {
+        
         const file = post.file?.[0]
-        if(!file) return
+        if(!file) return 
         // upload image to storage
-        const uploadedFile = await uploadFile(file)
-        if(!uploadedFile) throw Error
-        // else get fileUrl
-        const fileUrl = await getFilePreview(uploadedFile.$id)
-        if(!fileUrl){
-            deleteFile(uploadedFile.$id)
-            throw Error
-        }
-        console.log({fileUrl})
+        // if(post.file && post.file.length>0){
+            const uploadedFile = await uploadFile(file)
+        
+            if(!uploadedFile) throw Error
+            // else get fileUrl
+            const fileUrl = await getFilePreview(uploadedFile.$id)
+            if(!fileUrl){
+                deleteFile(uploadedFile.$id)
+                throw Error
+            }
+            console.log({fileUrl})
+        // }
 
         const tags = post.tags?.replace(/ /g, '').split(',') || []
         // save post to db
@@ -76,6 +83,7 @@ export async function createPost(post: InewPost){
             imageId: uploadedFile.$id,
             tags:tags
         })
+        // console.log({newPost})
         if(!newPost){
             deleteFile(uploadedFile.$id)
             throw Error
@@ -86,9 +94,10 @@ export async function createPost(post: InewPost){
     }
 }
 export async function uploadFile(file:File){
+    
     try {
        const uploadedFile = await storage.createFile(appwriteConfig.storageId, ID.unique(), file) 
-       return uploadedFile
+        return uploadedFile
     } catch (error) {
         console.log(error)
     }
@@ -110,7 +119,7 @@ export async function deleteFile(fileId:string){
     }
 }
 export async function getRecentPosts(){
-    const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(10)])
+    const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
     if(!posts) throw Error
     return posts
 }
@@ -133,6 +142,7 @@ export async function savedPost(postId:string, userId:string){
             user:userId,
             post:postId
             })
+            console.log({updatedPost})
         if(!updatedPost) throw Error
         return updatedPost
     } catch (error) {
@@ -144,6 +154,50 @@ export async function unSavePost(savedRecordId:string){
         const statusCode = await db.deleteDocument(appwriteConfig.databaseId, appwriteConfig.savesId, savedRecordId)
         if(!statusCode) throw Error
         return{status:'ok'}
+    } catch (error) {
+        console.log(error)
+    }
+}
+// repost logic
+// fetch data from appwrite
+// export async function fetchPost(){
+//     try {
+//         const res = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId)
+//         return res.documents;
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+// console.log(fetchPost())
+
+export async function repostPost(postId:string){
+    const {data:currentUser} = useGetCurrentUser()
+    try {
+        // fetch the original post 
+        const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
+        // repost data
+        const repost = {
+            content:post.content,
+            originalpostId : postId,
+            userId:currentUser,
+            timestamp:new Date().toISOString()
+        }
+        // repost to database
+        const res = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.postsId,ID.unique() , repost)
+        // console.log({res})
+        if(!res) throw Error
+        return res
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+
+export async function getPostbyId (postId:string){
+    try {
+        const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
+        return post
     } catch (error) {
         console.log(error)
     }

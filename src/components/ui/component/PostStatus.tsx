@@ -1,4 +1,4 @@
-import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useSavePost } from '@/lib/reactQuery/Queries'
+import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useRepost, useSavePost } from '@/lib/reactQuery/Queries'
 import { checkIsLiked } from '@/lib/utils'
 import { Models } from 'appwrite'
 import React, {useState, useEffect} from 'react'
@@ -18,11 +18,14 @@ const PostStatus = ({post, userId}: postStatusProps) => {
   const {mutate: savepost, isPending:isSavingPost} = useSavePost()
   const {mutate: unSavePost, isPending:isUnsavingPost} = useDeleteSavedPost()
   const {data : currentUser} = useGetCurrentUser()
+  const {mutate:repost, isPending:reposting} = useRepost()
 
   const savedPostRecord = currentUser?.save.find((record:Models.Document) => record.post.$id === post.$id)
   useEffect(()=>{
       setIsSave(!!savedPostRecord)
   },[currentUser])
+
+
   // functions for like, unlike, save and unsave post
   const handleLikePost = (e:React.MouseEvent) => {
     e.stopPropagation();
@@ -51,6 +54,11 @@ const PostStatus = ({post, userId}: postStatusProps) => {
       setIsSave(true)
     }
   }
+  const handleRePost = (e: React.MouseEvent, postId:string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    repost(postId)  
+  }
   return (
     <div className='flex justify-between items-center mt-2'>
       <div className='flex gap-1 items-center'>
@@ -64,7 +72,8 @@ const PostStatus = ({post, userId}: postStatusProps) => {
        
         <img src='/assets/svg/repost.svg'
          alt='repost'
-         onClick={()=> {}}
+         onClick={(e)=> handleRePost(e, post.$id)}
+         aria-disabled={reposting}
          className='cursor-pointer'
           />
         <img src='/assets/svg/comment.svg'

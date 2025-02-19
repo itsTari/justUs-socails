@@ -66,7 +66,7 @@ const SignInForm = () => {
              <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                <Input type="email" placeholder="@glory.com" {...field} />
+                <Input className="bg-black" type="email" placeholder="@glory.com" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>
@@ -79,7 +79,7 @@ const SignInForm = () => {
              <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                <Input type="text" placeholder="********" {...field} />
+                <Input className="bg-black" type="text" placeholder="********" {...field} />
                 </FormControl>
                 <FormMessage />
              </FormItem>

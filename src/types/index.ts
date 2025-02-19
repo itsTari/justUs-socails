@@ -45,7 +45,7 @@ export type IUpdatePost = {
     caption:string;
     imageId:string;
     imageUrl:URL;
-    file: File[];
+    file?: File[];
     // location?: string;
     tags?:string;
 }
