@@ -1,43 +1,48 @@
 export const links = [
     {
         label:'Create post',
-        route:'/create-post'
+        route:'/create-post',
+        imgURL:'./assets/svg/create.svg'
     },
     {
         label:'Edit post',
-        route:'/edit-post/:id'
+        route:'/edit-post/:id',
+        imgURL:'./assets/svg/edit.svg'
     },
     {
         label:'Saved post',
-        route:'/saved'
+        route:'/saved',
+        imgURL:'./assets/svg/saved.svg'
     },
     {
         label:'Liked post',
-        route:'/liked'
+        route:'/liked',
+        imgURL:'./assets/svg/heart.svg'
     },
     {
         label:'People',
-        route:'/all-users'  
+        route:'/all-users',
+        imgURL:'./assets/svg/users.svg' 
     }
 
 ]
 
 export const bottomLinks = [
     {
-        icon:'./public/assets/icons/home.png',
+        icon:'./assets/svg/home.svg',
         route:'/'
     },
     {
-        icon:'./public/assets/icons/group.png',
+        icon:'./assets/svg/users.svg',
         route:'/all-users' 
     },
 
     {
-        icon:'./public/assets/icons/bookmark-white.png',
+        icon:'./assets/svg/saved.svg',
         route:'/saved'
     },
     {
-        icon:'./public/assets/icons/edit.png',
+        icon:'./assets/svg/explore.svg',
         route:'/create-post'
     }
 ]

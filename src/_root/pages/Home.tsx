@@ -1,16 +1,12 @@
 import { useUserContext } from "@/context/AuthContext"
-import { BiComment } from "react-icons/bi";
-import { PiShuffleAngularFill } from "react-icons/pi";
-import { BiLike } from "react-icons/bi";
-import { FaRegBookmark } from "react-icons/fa6";
-import { LuShare } from "react-icons/lu";
 import { useGetRecentPost } from "@/lib/reactQuery/Queries";
-import {InfinitySpin } from 'react-loader-spinner'
+import Spinner from '@/components/ui/component/Spinner'
 import { Models } from "appwrite";
 import PostCard from "@/components/ui/component/PostCard";
+import PostIcon from "@/components/ui/component/PostIcon";
 
 const Home = () => {
-  const {user} = useUserContext()
+  // const {user} = useUserContext()
   const {data:posts, isPending:isPostLoading, isError:isErrorPost} = useGetRecentPost()
   
   return (
@@ -20,7 +16,7 @@ const Home = () => {
               <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] text-left w-full">Home Feed</h2>
               <div className="flex items-center gap-3 w-full">
                 {isPostLoading && !posts ?(
-                  <InfinitySpin  width="180" color="green" />
+                  <Spinner color="blue"  />
                 ):(
                   <ul className="flex flex-col gap-9 w-full">
                     {posts?.documents.map((post:Models.Document)=>(
@@ -44,6 +40,7 @@ const Home = () => {
                 <FaRegBookmark/>
                 <LuShare/>
             </div> */}
+            <PostIcon/>
         </div>
     </section>
   )

@@ -2,6 +2,7 @@ import { useUserContext } from "@/context/AuthContext"
 import { formatDateString } from "@/lib/utils"
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
+import PostStatus from "./PostStatus"
 
 type postCardProps = {
     post: Models.Document
@@ -23,21 +24,25 @@ const PostCard = ({post}: postCardProps) => {
                 </div>
 
             </div>
-            <Link to={`/edit-post/${post.$id}`} className={`${user.id !== post.creator.$id && 'hidden'}`}><img src="/public/assets/icons/edit.png" alt='edit'/></Link>
+            <Link to={`/edit-post/${post.$id}`} className={`${user.id !== post.creator.$id && 'hidden'}`}><img src="/assets/svg/edit.svg" alt='edit' className=" bg-white rounded-md"/></Link>
         </div>
         <Link to={`/posts/${post.$id}`}>
-            <div>
+            <div className="py-4">
                  <p>{post.caption}</p>
                  <ul>
                     {post.tags.map((tag:string)=>(
-                        <li key={tag}>#{tag}</li>
+                        <li key={tag} className="text-blue-400">#{tag}</li>
                     ))}
                  </ul>
             </div>
+            <div>
+                <img src={post.imageUrl} className="rounded-2xl"/>
+            </div>
 
-            <div className="flex justify-between items-start text-n-4">
+            <div className="flex justify-between items-start text-n-4 py-2">
                 <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px]">{formatDateString(post.$createdAt)}</p>
             </div>
+            <PostStatus post={post} userId={user.id}/>
         </Link>
        
     </div>

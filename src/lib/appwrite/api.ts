@@ -31,6 +31,7 @@ export async function signInAccount(user:{email:string; password:string}){
             console.log(error)
         }
 }
+//
 export async function getCurrentUser(){
     try {
         const currentAccount = await account.get()
@@ -112,4 +113,38 @@ export async function getRecentPosts(){
     const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(10)])
     if(!posts) throw Error
     return posts
+}
+export async function likePost(postId:string, likesArray:string[]){
+    try {
+        const updatedPost = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId, 
+            {
+            likes:likesArray
+            })
+        if(!updatedPost) throw Error
+        return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function savedPost(postId:string, userId:string){
+    try {
+        const updatedPost = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.savesId, ID.unique(), 
+            {
+            user:userId,
+            post:postId
+            })
+        if(!updatedPost) throw Error
+        return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function unSavePost(savedRecordId:string){
+    try {
+        const statusCode = await db.deleteDocument(appwriteConfig.databaseId, appwriteConfig.savesId, savedRecordId)
+        if(!statusCode) throw Error
+        return{status:'ok'}
+    } catch (error) {
+        console.log(error)
+    }
 }
