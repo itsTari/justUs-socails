@@ -1,9 +1,6 @@
-import { InewPost, INewUser } from "@/types";
+import { InewPost, INewUser, IRepost, IUpdatePost } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
-import { Trophy } from "lucide-react";
-import { useUserContext } from "@/context/AuthContext";
-import { useGetCurrentUser } from "../reactQuery/Queries";
 
 export async function createUserAccount(user:INewUser){
     try{
@@ -120,8 +117,11 @@ export async function deleteFile(fileId:string){
 }
 export async function getRecentPosts(){
     const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
+    const repost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId)
     if(!posts) throw Error
-    return posts
+    if(!repost) throw Error
+    const updatedPost =  [...posts.documents, ...repost.documents]
+    return updatedPost
 }
 export async function likePost(postId:string, likesArray:string[]){
     try {
@@ -159,45 +159,92 @@ export async function unSavePost(savedRecordId:string){
     }
 }
 // repost logic
-// fetch data from appwrite
-// export async function fetchPost(){
-//     try {
-//         const res = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId)
-//         return res.documents;
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-// console.log(fetchPost())
 
-export async function repostPost(postId:string){
-    const {data:currentUser} = useGetCurrentUser()
+export async function createRepost(repost:IRepost){
+    // const {data:currentUser} = useGetCurrentUser()
     try {
         // fetch the original post 
-        const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
-        // repost data
-        const repost = {
-            content:post.content,
-            originalpostId : postId,
-            userId:currentUser,
-            timestamp:new Date().toISOString()
-        }
+        // const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
+       
         // repost to database
-        const res = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.postsId,ID.unique() , repost)
-        // console.log({res})
+        const res = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.repostId, ID.unique(), 
+        {
+            userId:repost.userId,
+            originalPostId:repost.originalPostId,
+            comment:repost.comment,
+            timestamp:repost.timestamp
+        })
+        console.log('repost created:', res)
         if(!res) throw Error
         return res
     } catch (error) {
-        console.log(error)
+        console.log('Error creating repost',error)
     }
 
 }
-
+// export async function fetchRepost(){
+//     const originalPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId)
+    
+//     return [...originalPost.documents, ...repost.documents]
+// }
 
 export async function getPostbyId (postId:string){
     try {
         const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
         return post
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function UpdatePost(post: IUpdatePost){
+    const hasUpdateFile = post.file?.length > 0;
+    try {
+        
+        let image  = {
+            imageUrl:post.imageUrl,
+            imageId:post.imageId
+        }
+        if(hasUpdateFile){
+            const file = post.file?.[0]
+            if(!file) return 
+            const uploadedFile = await uploadFile(file)
+
+            if(!uploadedFile) throw Error
+            // else get fileUrl
+            const fileUrl = await getFilePreview(uploadedFile.$id)
+            if(!fileUrl){
+                deleteFile(uploadedFile.$id)
+                throw Error
+            }
+
+            image = {...image, imageUrl:fileUrl, imageId:uploadedFile.$id }
+        }
+        
+
+        const tags = post.tags?.replace(/ /g, '').split(',') || []
+        // save post to db
+        const updatedPost = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.postsId, post.postId,{
+            caption:post.caption,
+            imageUrl:image.imageUrl,
+            imageId:image.imageId,
+            tags:tags
+        })
+        if(!updatedPost){
+            await deleteFile(post.imageId)
+            throw Error
+        }
+        return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function deletePost(postId:string) {
+    // if(!postId || !imageId) throw Error
+    try {
+       const deletepost = await db.deleteDocument(appwriteConfig.databaseId, appwriteConfig.postsId,postId)
+       if(!deletepost) throw Error
+    //    await deleteFile(imageId)
+        return{status: 'ok'}
     } catch (error) {
         console.log(error)
     }

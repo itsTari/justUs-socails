@@ -11,14 +11,16 @@ import { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
 import { toast } from "@/hooks/use-toast"
 import { useNavigate } from "react-router-dom"
-import { useCreatePost } from "@/lib/reactQuery/Queries"
+import { useCreatePost, useDeletePost, useUpdatePost } from "@/lib/reactQuery/Queries"
  
 type PostFormProps ={
     post?:Models.Document;
+    action:'Create'| 'Update';
 }
 
-const PostForm = ({post}: PostFormProps) => {
+const PostForm = ({post, action}: PostFormProps) => {
     const  {mutateAsync:createPost , isPending:isLoadingPost} = useCreatePost();
+    const {mutateAsync:updatePost, isPending:isLoadingUpdate} = useUpdatePost()
     const {user} = useUserContext();
     const navigate = useNavigate();
 
@@ -33,6 +35,13 @@ const PostForm = ({post}: PostFormProps) => {
      
       // 2. Define a submit handler.
       async function onSubmit(values: z.infer<typeof PostValidation >) {
+        if(post && action === 'Update'){
+          const updatedPost = await updatePost({...values, postId:post.$id, imageId:post?.imageId, imageUrl:post.imageUrl})
+          if(!updatedPost){
+            toast({title: 'please try again'})
+          }
+          return navigate(`/posts/${post.$id}`)
+        }
         // Do something with the form values.
             const newPost = await createPost({...values, userId:user.id,})
             
@@ -87,7 +96,10 @@ const PostForm = ({post}: PostFormProps) => {
         />
         <div className="flex gap-4 justify-end ">
         <Button type="button">cancel</Button>
-        <Button type="submit" disabled={isLoadingPost}>Submit</Button>
+        <Button type="submit" disabled={isLoadingPost || isLoadingUpdate}>
+          {isLoadingPost || isLoadingUpdate && 'loading...'}
+          {action}
+          </Button>
         </div>
         </form>
     </Form>

@@ -25,6 +25,7 @@ export type INewUser={
     email:string;
     password:string;
 }
+
 export type IUpdateUser ={
     userId: string;
     name:string;
@@ -44,8 +45,14 @@ export type IUpdatePost = {
     postId:string;
     caption:string;
     imageId:string;
-    imageUrl:URL;
+    imageUrl:URL| string;
     file?: File[];
     // location?: string;
     tags?:string;
+}
+export type IRepost={
+    userId:string;
+    originalPostId:string;
+    comment:string;
+    timestamp?:string
 }

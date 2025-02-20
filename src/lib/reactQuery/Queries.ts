@@ -1,6 +1,6 @@
 import {useQuery, useMutation, useQueryClient, useInfiniteQuery} from '@tanstack/react-query'
-import { createPost, createUserAccount, getCurrentUser, getPostbyId, getRecentPosts, likePost, repostPost, savedPost, signInAccount, signOutAccount, unSavePost } from '../appwrite/api'
-import { InewPost, INewUser } from '@/types'
+import { createPost, createRepost, createUserAccount, deletePost, getCurrentUser, getPostbyId, getRecentPosts, likePost, savedPost, signInAccount, signOutAccount, unSavePost, UpdatePost } from '../appwrite/api'
+import { InewPost, INewUser, IRepost, IUpdatePost } from '@/types'
 import { QUERY_KEYS } from './Querieskey'
 
 export const useCreateUserAccount = () => {
@@ -103,7 +103,7 @@ export const useGetCurrentUser = () =>{
 export const useRepost =() => {
    const queryClient = useQueryClient() ;
    return useMutation({
-    mutationFn:(postId: string)=>repostPost(postId),
+    mutationFn:(repost: IRepost)=>createRepost(repost),
     onSuccess:()=>{
         queryClient.invalidateQueries({
             queryKey:[QUERY_KEYS.GET_RECENT_POSTS]
@@ -114,6 +114,7 @@ export const useRepost =() => {
     }
    })
 }
+
 // export const usePosts =()=>{
 //     return useQuery({
 //         queryKey:[QUERY_KEYS.GET_POSTS],
@@ -125,5 +126,27 @@ export const useGetPostById =(postId:string)=>{
         queryKey:[QUERY_KEYS.GET_POST_BY_ID, postId],
         queryFn:()=>getPostbyId(postId),
         enabled:!!postId
+    })
+}
+export const useUpdatePost =()=>{
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn:(post: IUpdatePost) => UpdatePost(post),
+        onSuccess:(data)=>{
+            queryClient.invalidateQueries({
+                queryKey:[QUERY_KEYS.GET_POST_BY_ID, data?.$id]
+            })
+        }
+    })
+}
+export const useDeletePost =()=>{
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn:(postId:string) => deletePost(postId),
+        onSuccess:()=>{
+            queryClient.invalidateQueries({
+                queryKey:[QUERY_KEYS.GET_RECENT_POSTS]
+            })
+        }
     })
 }

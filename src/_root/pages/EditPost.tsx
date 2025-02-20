@@ -2,7 +2,6 @@ import PostForm from '@/components/ui/component/PostForm'
 import Spinner from '@/components/ui/component/Spinner'
 import { useUserContext } from '@/context/AuthContext'
 import { useGetPostById } from '@/lib/reactQuery/Queries'
-import React from 'react'
 import { useParams } from 'react-router-dom'
 
 const EditPost = () => {
@@ -19,7 +18,7 @@ const EditPost = () => {
             <img src={user.imageUrl} className="bg-n-2 rounded-full" width={36} height={36} alt='add-post'/>
             <h2 className="h2">Edit post</h2>
           </div>
-          <PostForm action='update' post={post}/>
+          <PostForm action='Update' post={post}/>
         </div>
     </div>
   )

@@ -5,7 +5,7 @@ import AuthLayout from "./_auth/AuthLayout"
 import RootLayout from "./_root/RootLayout"
 import { Toaster } from "@/components/ui/toaster"
 import NotFound from "./components/ui/component/NotFound"
-import { AllUsers, CreatePost, EditPost, Home, LikedPost, Profile, Saved } from "./_root/pages"
+import { AllUsers, CreatePost, EditPost, Home, LikedPost, PostDetails, Profile, Saved } from "./_root/pages"
 
 function App() {
   const router =createBrowserRouter(createRoutesFromElements(
@@ -22,6 +22,7 @@ function App() {
         <Route path='/liked'element={<LikedPost/>}/>
         <Route path='/all-users'element={<AllUsers/>}/>
         <Route path='/profile/:id/*'element={<Profile/>}/>
+        <Route path='/posts/:id'element={<PostDetails/>}/>
       </Route>
       <Route path="*" element={<NotFound/>}/>
     </Route>
