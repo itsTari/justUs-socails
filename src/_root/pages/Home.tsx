@@ -1,4 +1,4 @@
-import { useUserContext } from "@/context/AuthContext"
+
 import { useGetRecentPost } from "@/lib/reactQuery/Queries";
 import Spinner from '@/components/ui/component/Spinner'
 import { Models } from "appwrite";
@@ -6,8 +6,9 @@ import PostCard from "@/components/ui/component/PostCard";
 import PostIcon from "@/components/ui/component/PostIcon";
 
 const Home = () => {
+ 
   // const {user} = useUserContext()
-  const {data:updatedPost, isPending:isPostLoading, isError:isErrorPost} = useGetRecentPost()
+  const {data:posts, isPending:isPostLoading} = useGetRecentPost()
   
   return (
     <section className="flex flex-1">
@@ -15,12 +16,13 @@ const Home = () => {
             <div className="max-w-screen-sm flex flex-col items-center w-full gap-6 md:gap-9;">
               <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] text-left w-full">Home Feed</h2>
               <div className="flex items-center gap-3 w-full">
-                {isPostLoading && !updatedPost ?(
+                {isPostLoading && !posts ?(
                   <Spinner size={140} color="blue"  />
                 ):(
-                  <ul className="flex flex-col gap-9 w-full">
-                    {updatedPost?.map((post:Models.Document)=>(
-                      <PostCard post={post}/>
+                  
+                  <ul className="flex flex-col gap-9">
+                    {posts?.map((post:Models.Document)=>(
+                      <PostCard key={post.$id} post={post}/>
                       
                     ))}
                   </ul>

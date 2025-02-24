@@ -16,7 +16,6 @@ import { useUserContext } from "@/context/AuthContext"
 
 
 
-
 const SignUpForm = () => {
     const { toast } = useToast()
     const {checkAuthUser, isLoading:isUserLoading}= useUserContext()
@@ -26,6 +25,7 @@ const SignUpForm = () => {
     const {mutateAsync:createUserAccount, isPending:isCreatingUser} = useCreateUserAccount()
 
     const {mutateAsync:signInAccount, isPending:isSigningIn} = useSignInAccount()
+    
 
     const form = useForm<z.infer<typeof SignUpValidation>>({
         resolver: zodResolver(SignUpValidation),
@@ -119,7 +119,7 @@ const SignUpForm = () => {
              </FormItem>
             )}
         />
-      <Button type="submit">
+      <Button type="submit" disabled={isCreatingUser || isSigningIn || isUserLoading}>
         {isCreatingUser? (
             <div className="flex items-center gap-2"><FiLoader />Loading...</div>
         ):(<div>Sign up</div>)}

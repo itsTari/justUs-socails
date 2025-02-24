@@ -23,7 +23,13 @@ export const links = [
         label:'People',
         route:'/all-users',
         imgURL:'./assets/svg/users.svg' 
+    },
+    {
+        label:'Home',
+        route:'/',
+        imgURL:'./assets/svg/home.svg' 
     }
+
 
 ]
 

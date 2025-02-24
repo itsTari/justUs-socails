@@ -1,7 +1,6 @@
 import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useRepost, useSavePost } from '@/lib/reactQuery/Queries'
 import { checkIsLiked } from '@/lib/utils'
 import { Models } from 'appwrite'
-import { timeStamp } from 'node:console'
 import React, {useState, useEffect} from 'react'
 
 type postStatusProps = {
@@ -59,7 +58,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
     e.stopPropagation();
     e.preventDefault();
     
-    const repostPost = repost({userId:userId, originalPostId:post.$id, comment:'hello', timestamp:post.$createdAt})
+    const repostPost = repost({userId:userId, originalPostId:post.$id, comment:'hello dear.. my own thought', timestamp:post.$createdAt})
     return repostPost
   }
   return (

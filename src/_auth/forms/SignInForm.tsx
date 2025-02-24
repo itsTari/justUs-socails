@@ -23,7 +23,7 @@ const SignInForm = () => {
     const navigate = useNavigate()
     // const isLoading = false;
 
-    const {mutateAsync:signInAccount} = useSignInAccount()
+    const {mutateAsync:signInAccount, isPending} = useSignInAccount()
 
     const form = useForm<z.infer<typeof SignInValidation>>({
         resolver: zodResolver(SignInValidation),
@@ -85,7 +85,7 @@ const SignInForm = () => {
              </FormItem>
             )}
         />
-      <Button type="submit">
+      <Button type="submit" disabled={isPending}>
         {isUserLoading? (
             <div className="flex items-center gap-2"><FiLoader />Loading...</div>
         ):(<div>Sign in </div>)}

@@ -53,6 +53,6 @@ export type IUpdatePost = {
 export type IRepost={
     userId:string;
     originalPostId:string;
-    comment:string;
-    timestamp?:string
+    comment?:string;
+    timestamp:string
 }

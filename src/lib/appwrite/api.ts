@@ -72,6 +72,7 @@ export async function createPost(post: InewPost){
         // }
 
         const tags = post.tags?.replace(/ /g, '').split(',') || []
+        // const caption =post.caption
         // save post to db
         const newPost = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.postsId, ID.unique(),{
             creator:post.userId,
@@ -115,14 +116,7 @@ export async function deleteFile(fileId:string){
         console.log(error)
     }
 }
-export async function getRecentPosts(){
-    const posts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
-    const repost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId)
-    if(!posts) throw Error
-    if(!repost) throw Error
-    const updatedPost =  [...posts.documents, ...repost.documents]
-    return updatedPost
-}
+
 export async function likePost(postId:string, likesArray:string[]){
     try {
         const updatedPost = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId, 
@@ -182,6 +176,19 @@ export async function createRepost(repost:IRepost){
     }
 
 }
+
+export async function getRecentPosts(){
+    const originalPosts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
+    const reposts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId, [Query.orderDesc('$createdAt'), Query.limit(20)])
+    
+    const enrichedRepost = reposts.documents.map((repost)=>{
+            const originalPost = db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, repost.origianlPostId,)
+            return {...repost, originalPost}
+        })
+    return [...originalPosts.documents, ...enrichedRepost]
+    // const updatedPost =  [...posts.documents, ...repost.documents]
+    // return updatedPost
+}
 // export async function fetchRepost(){
 //     const originalPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId)
     
@@ -197,8 +204,8 @@ export async function getPostbyId (postId:string){
     }
 }
 export async function UpdatePost(post: IUpdatePost){
-    const hasUpdateFile = post.file?.length > 0;
     try {
+        const hasUpdateFile = post.file?.[0];
         
         let image  = {
             imageUrl:post.imageUrl,

@@ -11,7 +11,7 @@ import { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
 import { toast } from "@/hooks/use-toast"
 import { useNavigate } from "react-router-dom"
-import { useCreatePost, useDeletePost, useUpdatePost } from "@/lib/reactQuery/Queries"
+import { useCreatePost, useUpdatePost } from "@/lib/reactQuery/Queries"
  
 type PostFormProps ={
     post?:Models.Document;
@@ -36,7 +36,7 @@ const PostForm = ({post, action}: PostFormProps) => {
       // 2. Define a submit handler.
       async function onSubmit(values: z.infer<typeof PostValidation >) {
         if(post && action === 'Update'){
-          const updatedPost = await updatePost({...values, postId:post.$id, imageId:post?.imageId, imageUrl:post.imageUrl})
+          const updatedPost = await updatePost({...values, postId:post.$id, imageId:post.imageId, imageUrl:post.imageUrl})
           if(!updatedPost){
             toast({title: 'please try again'})
           }
@@ -62,7 +62,7 @@ const PostForm = ({post, action}: PostFormProps) => {
           <FormItem>
             <FormLabel className="body-1 text-n-3 ">What&apos;s happening?</FormLabel>
             <FormControl>
-              <Textarea  className=' bg-n-7 h-[9rem]  border-none'placeholder="What's happening?" {...field} />
+              <Textarea  className=' bg-n-7 h-[9rem] p-10 border-none'placeholder="What's happening?" {...field} />
             </FormControl>
             <FormMessage  />
           </FormItem>

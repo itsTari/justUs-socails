@@ -24,6 +24,9 @@ const Topbar = () => {
           setShowBar(true)
         }
       }
+      const handleClick= () =>{
+        setShowBar(false)
+      }
   return (
     <header>
         <div className='flex justify-between py-4 px-5'>
@@ -33,12 +36,12 @@ const Topbar = () => {
             <div className="flex items-center gap-5">
                 <div className="relative hidden md:block ">
                     <PiDotsThreeOutlineLight className="text-2xl md:text-4xl cursor-pointer" onClick={showModal} />
-                        <div className={`${showBar ? 'flex': 'hidden'} bg-n-1 w-40 absolute right-1 p-2 flex-col items-start rounded-md gap-3 transition`}>
+                        <div className={`${showBar ? 'flex': 'hidden'} bg-n-7 w-44 absolute right-1 p-2 flex-col items-start  rounded-md gap-3 transition`}>
                           {links.map((item: INavLink)=>(
-                            <Link to={item.route} className="text-n-8 mt-2 hover:text-n-7">{item.label}</Link>
+                            <Link  key={item.label} to={item.route} onClick={handleClick} className="flex items-center justify-between w-full text-n-1 mt-2 hover:text-n-4">{item.label} <img src={item.imgURL} alt={item.label}/></Link>
                           )
                           )}
-                          <Button>delete post</Button>
+                          {/* <Button>delete post</Button> */}
                         </div> 
                 </div>
                 <Link to={`/profile/${user.id}`}>

@@ -3,7 +3,7 @@ import BottomBar from "@/components/ui/component/BottomBar"
 import { Outlet } from "react-router-dom"
 const RootLayout = () => {
   return (
-    <div className="body relative">
+    <div className="relative">
         <Topbar/>
         <section className=" py-14">
            <Outlet/>
