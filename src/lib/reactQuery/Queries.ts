@@ -1,5 +1,5 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import { createPost, createRepost, createUserAccount, deletePost, getCurrentUser, getPostbyId, getRecentPosts, likePost, savedPost, signInAccount, signOutAccount, unSavePost, UpdatePost } from '../appwrite/api'
+import { createPost, createRepost, createUserAccount, deletePost, getCurrentUser, getPostbyId, getRecentPosts, getSavedPost, likePost, savedPost, signInAccount, signOutAccount, unSavePost, UpdatePost } from '../appwrite/api'
 import { InewPost, INewUser, IRepost, IUpdatePost } from '@/types'
 import { QUERY_KEYS } from './Querieskey'
 
@@ -148,5 +148,12 @@ export const useDeletePost =()=>{
                 queryKey:[QUERY_KEYS.GET_RECENT_POSTS]
             })
         }
+    })
+}
+//  // // geting the saved post
+export const useGetSavedPost = () =>{
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+        queryFn:getSavedPost
     })
 }

@@ -51,7 +51,9 @@ const PostForm = ({post, action}: PostFormProps) => {
             navigate('/')
         console.log(values)
       }
-    
+      const handleCancel =()=>{
+        navigate('/')
+      }
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
@@ -95,7 +97,7 @@ const PostForm = ({post, action}: PostFormProps) => {
             )}
         />
         <div className="flex gap-4 justify-end ">
-        <Button type="button">cancel</Button>
+        <Button type="button" onClick={handleCancel}>cancel</Button>
         <Button type="submit" disabled={isLoadingPost || isLoadingUpdate}>
           {isLoadingPost || isLoadingUpdate && 'loading...'}
           {action}

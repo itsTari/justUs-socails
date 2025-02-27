@@ -14,6 +14,6 @@ export const SignUpValidation = z.object({
   })
   export const PostValidation = z.object({
     caption: z.string().min(5, {message: 'post caption must be at least 5 characters'}).max(5200),
-    file: z.custom<File[]>(),
+    file: z.custom<File[] >().optional(),
     tags:z.string()
   })

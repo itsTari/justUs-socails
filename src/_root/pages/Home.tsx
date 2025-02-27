@@ -9,7 +9,7 @@ const Home = () => {
  
   // const {user} = useUserContext()
   const {data:posts, isPending:isPostLoading} = useGetRecentPost()
-  
+  console.log({posts})
   return (
     <section className="flex flex-1">
         <div className="flex flex-col flex-1 items-center gap-10 py-10 px-5 md:px-8 lg:p-14  ">
@@ -22,7 +22,7 @@ const Home = () => {
                   
                   <ul className="flex flex-col gap-9">
                     {posts?.map((post:Models.Document)=>(
-                      <PostCard key={post.$id} post={post}/>
+                      <PostCard key={post.id} post={post}/>
                       
                     ))}
                   </ul>

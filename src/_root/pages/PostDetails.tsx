@@ -12,7 +12,9 @@ const PostDetails = () => {
   const navigate = useNavigate()
   const {mutateAsync:deletePost} = useDeletePost()
   const handleDeletePost = ()=>{
-    deletePost(post?.$id || '')
+    if(window.confirm('Are you sure you want to delete this post?')){
+      deletePost(post?.$id || '')
+    }
     navigate(-1)
   }
   return (

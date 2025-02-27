@@ -1,6 +1,7 @@
 import { InewPost, INewUser, IRepost, IUpdatePost } from "@/types";
-import { ID, Query } from "appwrite";
+import { ID,  Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
+import { error } from "console";
 
 export async function createUserAccount(user:INewUser){
     try{
@@ -54,37 +55,38 @@ export async function signOutAccount(){
 }
 export async function createPost(post: InewPost){
     try {
-        
+        let fileUrl : string | null = null; // Initialize fileUrl as an empty string
         const file = post.file?.[0]
-        if(!file) return 
+        if(!file) return
         // upload image to storage
-        // if(post.file && post.file.length>0){
             const uploadedFile = await uploadFile(file)
         
-            if(!uploadedFile) throw Error
+            if(!uploadedFile) throw new Error('file upload failed')
             // else get fileUrl
-            const fileUrl = await getFilePreview(uploadedFile.$id)
+            fileUrl =  await getFilePreview(uploadedFile.$id) 
             if(!fileUrl){
                 deleteFile(uploadedFile.$id)
-                throw Error
+                throw new Error('Failed to get file preview')
             }
             console.log({fileUrl})
-        // }
-
+        
+             // Process tags if available
         const tags = post.tags?.replace(/ /g, '').split(',') || []
-        // const caption =post.caption
-        // save post to db
+        
+           // Create the post document with or without the file URL
         const newPost = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.postsId, ID.unique(),{
             creator:post.userId,
             caption:post.caption,
-            imageUrl:fileUrl,
-            imageId: uploadedFile.$id,
+            imageUrl:fileUrl || null, // If no image, set to null
+            imageId: fileUrl? uploadedFile?.$id: null, // Only set imageId if there is an image
             tags:tags
         })
         // console.log({newPost})
         if(!newPost){
-            deleteFile(uploadedFile.$id)
-            throw Error
+            if(uploadedFile){
+                deleteFile(uploadedFile.$id)
+            }
+            throw new Error ("Post creation failed");
         }
         return newPost
     } catch (error) {
@@ -92,20 +94,22 @@ export async function createPost(post: InewPost){
     }
 }
 export async function uploadFile(file:File){
-    
+    // : Promise<Models.File | null>
     try {
        const uploadedFile = await storage.createFile(appwriteConfig.storageId, ID.unique(), file) 
         return uploadedFile
     } catch (error) {
         console.log(error)
+        // return null
     }
 }
-export async function getFilePreview(fileId:string){
+export async function getFilePreview(fileId:string): Promise<string|null>{
     try {
         const fileUrl = storage.getFilePreview(appwriteConfig.storageId, fileId, 2000, 2000)
         return fileUrl
     } catch (error) {
-        console.log(error)
+        console.log('Failed to fetch file preview:', error)
+        return null;
     }
 }
 export async function deleteFile(fileId:string){
@@ -179,12 +183,14 @@ export async function createRepost(repost:IRepost){
 
 export async function getRecentPosts(){
     const originalPosts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
-    const reposts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId, [Query.orderDesc('$createdAt'), Query.limit(20)])
+    const reposts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId, [Query.orderDesc('$createdAt')])
     
     const enrichedRepost = reposts.documents.map((repost)=>{
-            const originalPost = db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, repost.origianlPostId,)
+            const originalPost = db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, repost.origianlPostId)
             return {...repost, originalPost}
-        })
+    })
+    if(!originalPosts) throw Error
+    if(!enrichedRepost) throw Error
     return [...originalPosts.documents, ...enrichedRepost]
     // const updatedPost =  [...posts.documents, ...repost.documents]
     // return updatedPost
@@ -252,6 +258,20 @@ export async function deletePost(postId:string) {
        if(!deletepost) throw Error
     //    await deleteFile(imageId)
         return{status: 'ok'}
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function getSavedPost () {
+    try {
+        // const user = await getCurrentUser() // Get current user
+        // if(!user) throw new Error("User is not logged in");
+        const savedPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.savesId)
+        
+        if(!savedPost || savedPost.total === 0) {
+            throw new Error("No saved posts found");
+        }
+        return savedPost
     } catch (error) {
         console.log(error)
     }

@@ -48,7 +48,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
     
     if(savedPostRecord){
       setIsSave(false)
-      unSavePost(savedPostRecord.$id)
+      unSavePost(savedPostRecord.$id )
     }else{
       savepost({postId:post.$id, userId})
       setIsSave(true)
@@ -58,7 +58,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
     e.stopPropagation();
     e.preventDefault();
     
-    const repostPost = repost({userId:userId, originalPostId:post.$id, comment:'hello dear.. my own thought', timestamp:post.$createdAt})
+    const repostPost = repost({userId, originalPostId:post.$id, comment:'hello dear.. my own thought', timestamp:post.$createdAt})
     return repostPost
   }
   return (
