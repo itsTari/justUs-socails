@@ -9,7 +9,22 @@ type  gridPostProps= {
 const PostGrid = ({post}:gridPostProps) => {
     const {user} = useUserContext()
   return (
-    <div className='w-full grid grid-cols-1 grid-flow-row lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+    <div className='w-full'>
+          <div className="flex items-center gap-3">
+              <Link to={`$/profile/${post.post.creator.$id}`}>
+                <img
+                  src={post.post.creator.imageUrl || ""}
+                  alt="creator"
+                  className="rounded-full w-10 lg:h-10"
+                />
+              </Link>
+              <div className="flex flex-col">
+                <p className="text-[12px] font-medium leading-[140%] lg:text-[15px]">
+                  {post.post.creator.name}
+                </p>
+                <p className="text-n-4 text-[12px] lg:text-[15px]">@{post.post.creator.username}</p>
+              </div>
+            </div>
           <Link to={`/posts/${post.post.$id}`} >
             <div className="py-4">
               <p className="">{post.post.caption}</p>
