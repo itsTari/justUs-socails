@@ -159,7 +159,6 @@ export async function unSavePost(savedRecordId:string){
 // repost logic
 
 export async function createRepost(repost:IRepost){
-    // const {data:currentUser} = useGetCurrentUser()
     try {
         // fetch the original post 
         // const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
@@ -262,10 +261,9 @@ export async function deletePost(postId:string) {
         console.log(error)
     }
 }
+// // getsaved post func api
 export async function getSavedPost () {
     try {
-        // const user = await getCurrentUser() // Get current user
-        // if(!user) throw new Error("User is not logged in");
         const savedPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.savesId)
         
         if(!savedPost || savedPost.total === 0) {
