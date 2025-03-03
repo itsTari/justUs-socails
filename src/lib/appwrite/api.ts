@@ -1,7 +1,6 @@
 import { InewPost, INewUser, IRepost, IUpdatePost } from "@/types";
 import { ID,  Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
-import { error } from "console";
 
 export async function createUserAccount(user:INewUser){
     try{
@@ -274,3 +273,14 @@ export async function getSavedPost () {
         console.log(error)
     }
 }
+
+// // profile page
+export async function getUserById(userId?: string) {
+    try {
+        if (!userId || userId === "me") return null;
+        const user = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.usersId, userId);
+        return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }

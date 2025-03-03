@@ -33,7 +33,7 @@ const PostDetails = () => {
             <img src={post?.imageUrl} alt='post' className="lg:h-[500px] xl:w-[100%] rounded-t-[30px] xl:rounded-l-[24px] xl:rounded-tr-none object-cover p-5"/>
 
           <div className="flex justify-between items-center lg:gap-7 flex-1  p-8 rounded-[30px]">
-            <Link to={`$/profile/${post?.creator.$id}`} className="flex gap-3 items-center">
+            <Link to={`/profile/${post?.creator.$id}`} className="flex gap-3 items-center">
               <img
                 src={post?.creator.imageUrl || ""}
                 alt="creator"

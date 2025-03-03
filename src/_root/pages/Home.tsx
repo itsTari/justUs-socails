@@ -34,14 +34,6 @@ const Home = () => {
                 </div> */}
               </div>
             </div>
-            
-            {/* <div className="border-y border-n-5 flex justify-between my-4 py-2 px-4 text-2xl w-full">
-                <BiComment/>
-                <PiShuffleAngularFill/>
-                <BiLike/>
-                <FaRegBookmark/>
-                <LuShare/>
-            </div> */}
             <PostIcon/>
         </div>
     </section>

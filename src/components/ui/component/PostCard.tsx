@@ -22,7 +22,7 @@ const PostCard = ({ post }: postCardProps) => {
           {post.comment && <p>"{post.comment}"</p>}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <Link to={`$/profile/${post.creator.$id}`}>
+              <Link to={`/profile/${post.creator.$id}`}>
                 <img
                   src={post.creator.imageUrl || ""}
                   alt="creator"
@@ -70,7 +70,7 @@ const PostCard = ({ post }: postCardProps) => {
         <>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <Link to={`$/profile/${post.creator.$id}`}>
+              <Link to={`/profile/${post.creator.$id}`}>
                 <img
                   src={post.creator.imageUrl || ""}
                   alt="creator"
