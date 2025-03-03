@@ -1,7 +1,9 @@
 // import { useUserContext } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import LikedPosts from "@/components/ui/component/LikedPosts"
+import UsersPost from "@/components/ui/component/UsersPost"
 import { useGetCurrentUser, useGetUserById } from "@/lib/reactQuery/Queries"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
 
 const EditButton = () =>{
@@ -25,6 +27,8 @@ const Profile = () => {
 
   const profileUser = isOwnProfile ? currentUser : otherUser;
 
+  // for the posts and likes logic of the current user 
+  const [activeTab, setActiveTab] = useState("posts");
 
   return (
     <div className="px-5 md:px-16">
@@ -42,10 +46,11 @@ const Profile = () => {
           </div>
        </div>
        <div className="flex gap-6 py-10">
-          <Button>Posts</Button>
-          <Button>Liked posts</Button>
+          <Button onClick={() => setActiveTab("posts")} className={isOwnProfile && activeTab === "posts" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Posts</Button>
+          {isOwnProfile && <Button onClick={()=> setActiveTab("likes")} className={activeTab === "likes" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Liked posts</Button>}
        </div>
-       <LikedPosts/>
+       {activeTab === "posts" && <UsersPost/>}
+       {activeTab === "likes" && <LikedPosts/>}
     </div>
   )
 }
