@@ -49,8 +49,8 @@ const Profile = () => {
           <Button onClick={() => setActiveTab("posts")} className={isOwnProfile && activeTab === "posts" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Posts</Button>
           {isOwnProfile && <Button onClick={()=> setActiveTab("likes")} className={activeTab === "likes" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Liked posts</Button>}
        </div>
-       {activeTab === "posts" && <UsersPost/>}
-       {activeTab === "likes" && <LikedPosts/>}
+       {activeTab === "posts" && <UsersPost userId={profileUser?.$id}/>}
+       {activeTab === "likes" && <LikedPosts />}
     </div>
   )
 }

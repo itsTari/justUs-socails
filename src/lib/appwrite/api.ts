@@ -284,3 +284,15 @@ export async function getUserById(userId?: string) {
       console.log(error);
     }
   }
+export async function getUsersPosts (userId?:string) {
+    if (!userId) {
+        throw new Error("User ID is required to fetch posts");
+    }
+    try {
+        const usersPost = db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.equal('userId', userId)] )
+        return usersPost
+
+    } catch (error) {
+        console.log(error)
+    }
+}

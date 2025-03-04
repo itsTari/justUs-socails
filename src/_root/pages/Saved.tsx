@@ -1,4 +1,4 @@
-import PostGrid from "@/components/ui/component/postGrid"
+import PostGrid from "@/components/ui/component/PostGrid"
 import Spinner from "@/components/ui/component/Spinner"
 import { useGetSavedPost } from "@/lib/reactQuery/Queries"
 
@@ -17,8 +17,8 @@ const Saved = () => {
           
           { isPending ? <Spinner size={50} color="blue"/> : !savedPost || savedPost.total === 0 ? <div className="h3 text-n-4 w-full text-center">You have no saved posts.</div> : 
             <ul className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 ">  
-                {savedPost?.documents.map((post)=>(
-                  <PostGrid key={post.$id} post={post}/>
+                {savedPost?.documents.map((post, id)=>(
+                  <PostGrid key={id} post={post}/>
                 ))}
             </ul>
            }

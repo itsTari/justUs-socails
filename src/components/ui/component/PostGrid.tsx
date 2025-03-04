@@ -11,7 +11,7 @@ const PostGrid = ({post}:gridPostProps) => {
   return (
     <div className='w-full'>
           <div className="flex items-center gap-3">
-              <Link to={`$/profile/${post.post.creator.$id}`}>
+              <Link to={`/profile/${post.post.creator.$id}`}>
                 <img
                   src={post.post.creator.imageUrl || ""}
                   alt="creator"
