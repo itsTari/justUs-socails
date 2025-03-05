@@ -4,11 +4,11 @@ import LikedPosts from "@/components/ui/component/LikedPosts"
 import UsersPost from "@/components/ui/component/UsersPost"
 import { useGetCurrentUser, useGetUserById } from "@/lib/reactQuery/Queries"
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 const EditButton = () =>{
   return(
-    <Button>Edit profile</Button>
+    <Button><Link to='/edit-profile'>Edit profile</Link></Button>
   )
 }
 const FollowButton = () =>{
@@ -40,6 +40,7 @@ const Profile = () => {
           <h1 className="text-[16px] font-medium leading-[140%] lg:text-[18px]">{profileUser?.name}</h1>
           <p className="text-n-4">@{profileUser?.username}</p>
           <p>{profileUser?.bio}</p>
+          <p>{profileUser?.birthdate}</p>
           <div>
             <span className="text-n-3 pr-4"><span className="text-white">0</span> following</span>
             <span className="text-n-3"><span className="text-white">0</span> followers</span>
@@ -49,7 +50,7 @@ const Profile = () => {
           <Button onClick={() => setActiveTab("posts")} className={isOwnProfile && activeTab === "posts" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Posts</Button>
           {isOwnProfile && <Button onClick={()=> setActiveTab("likes")} className={activeTab === "likes" ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary text-primary-foreground' }>Liked posts</Button>}
        </div>
-       {activeTab === "posts" && <UsersPost userId={profileUser?.$id}/>}
+       {activeTab === "posts" && <UsersPost />}
        {activeTab === "likes" && <LikedPosts />}
     </div>
   )

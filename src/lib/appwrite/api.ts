@@ -1,4 +1,4 @@
-import { InewPost, INewUser, IRepost, IUpdatePost } from "@/types";
+import { InewPost, INewUser, IRepost, IUpdatePost, IUpdateUser } from "@/types";
 import { ID,  Query } from "appwrite";
 import { account, appwriteConfig, avarter, db, storage } from "./config";
 
@@ -207,6 +207,7 @@ export async function getPostbyId (postId:string){
         console.log(error)
     }
 }
+// // edit post func
 export async function UpdatePost(post: IUpdatePost){
     try {
         const hasUpdateFile = post.file?.[0];
@@ -289,9 +290,39 @@ export async function getUsersPosts (userId?:string) {
         throw new Error("User ID is required to fetch posts");
     }
     try {
-        const usersPost = db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.equal('userId', userId)] )
-        return usersPost
+        const usersPost = db.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersId, [Query.equal('userId', userId)] )
+        return (await usersPost).documents
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+// //updateUser in profile page
+export async function updateUser(user:IUpdateUser){
+    try {
+        const hasUpdateFile = user.file?.[0];
+        
+        let image  = {
+            imageUrl:user.imageUrl,
+            imageId:user.imageId
+        }
+        if(hasUpdateFile){
+            const file = user.file?.[0]
+            if(!file) return 
+            const uploadedFile = await uploadFile(file)
+
+            if(!uploadedFile) throw Error
+            // else get fileUrl
+            const fileUrl = await getFilePreview(uploadedFile.$id)
+            if(!fileUrl){
+                deleteFile(uploadedFile.$id)
+                throw Error
+            }
+
+            image = {...image, imageUrl:fileUrl, imageId:uploadedFile.$id }
+        }
+
+        const userInfo = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.usersId)     
     } catch (error) {
         console.log(error)
     }

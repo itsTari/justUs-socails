@@ -18,6 +18,7 @@ export type IUser ={
     email:string;
     imageUrl:string;
     bio:string;
+    birthdate:string;
 }
 export type INewUser={
     name:string
@@ -29,7 +30,10 @@ export type INewUser={
 export type IUpdateUser ={
     userId: string;
     name:string;
+    username:string;
+    email:string;
     bio:string;
+    birthdate:string;
     imageId:string;
     imageUrl:URL | string;
     file: File[];
@@ -46,7 +50,6 @@ export type IUpdatePost = {
     imageId:string;
     imageUrl:URL| string;
     file?: File[] | null;
-    // location?: string;
     tags?:string;
 }
 export type IRepost={

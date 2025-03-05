@@ -4,7 +4,7 @@ import { useGetSavedPost } from "@/lib/reactQuery/Queries"
 
 const Saved = () => {
   const {data:savedPost, isPending} = useGetSavedPost()
-  // console.log({savedPost})
+  console.log({savedPost})
   return (
     <div className="flex flex-1 ">
       <div className="flex flex-1 flex-col py-10 px-5 md:px-8 lg:p-14">
