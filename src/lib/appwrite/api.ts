@@ -210,8 +210,10 @@ export async function getPostbyId (postId:string){
 // // edit post func
 export async function UpdatePost(post: IUpdatePost){
     try {
+      
         const hasUpdateFile = post.file?.[0];
         
+        // Initialize with existing image data (in case they didn't change it)
         let image  = {
             imageUrl:post.imageUrl,
             imageId:post.imageId
@@ -222,13 +224,14 @@ export async function UpdatePost(post: IUpdatePost){
             const uploadedFile = await uploadFile(file)
 
             if(!uploadedFile) throw Error
-            // else get fileUrl
+            // else get file preview Url
             const fileUrl = await getFilePreview(uploadedFile.$id)
             if(!fileUrl){
                 deleteFile(uploadedFile.$id)
                 throw Error
             }
 
+            // Update image object with new data
             image = {...image, imageUrl:fileUrl, imageId:uploadedFile.$id }
         }
         
@@ -300,8 +303,9 @@ export async function getUsersPosts (userId?:string) {
 // //updateUser in profile page
 export async function updateUser(user:IUpdateUser){
     try {
+          // to check if a file is uploaded
         const hasUpdateFile = user.file?.[0];
-        
+        // Initialize with existing image data (in case they didn't change it)
         let image  = {
             imageUrl:user.imageUrl,
             imageId:user.imageId
@@ -312,18 +316,37 @@ export async function updateUser(user:IUpdateUser){
             const uploadedFile = await uploadFile(file)
 
             if(!uploadedFile) throw Error
-            // else get fileUrl
+            // else get file preview Url
             const fileUrl = await getFilePreview(uploadedFile.$id)
             if(!fileUrl){
                 deleteFile(uploadedFile.$id)
                 throw Error
             }
-
-            image = {...image, imageUrl:fileUrl, imageId:uploadedFile.$id }
+            // Update image object with new data
+            image = {...image, imageUrl:fileUrl, imageId:uploadedFile.$id}
         }
 
-        const userInfo = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.usersId)     
+
+        const updatedUserInfo = await db.updateDocument(appwriteConfig.databaseId, appwriteConfig.usersId, user.userId, 
+            {
+                name : user.name,
+                username:user.username,
+                bio:user.bio,
+                email:user.email,
+                // birthdate:user.birthdate,
+                website:user.website,
+                imageUrl:image.imageUrl,
+                imageId:image.imageId
+
+            }
+        ) 
+        if(!updatedUserInfo) {
+            await deleteFile(user.imageId)
+            throw Error
+        }
+        console.log({updatedUserInfo}) 
+        return updatedUserInfo   
     } catch (error) {
-        console.log(error)
+        console.log("Failed to update user:", error)
     }
 }

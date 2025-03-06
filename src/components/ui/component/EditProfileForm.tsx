@@ -9,9 +9,13 @@ import { useUserContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { profileUpdateValidation } from "@/_auth/forms/Validation";
 import ProfilePicUpload from "./ProfilePicUpload";
+import { useUpdateUser } from "@/lib/reactQuery/Queries";
+import { toast } from "@/hooks/use-toast";
 
 const EditProfileForm = () => {
   const { user } = useUserContext();
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } = useUpdateUser();
+  console.log({updateUser})
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof profileUpdateValidation>>({
@@ -21,15 +25,23 @@ const EditProfileForm = () => {
       name: user.name,
       username:user.username,
       bio: user.bio || "",
-      birthdate:user.birthdate || "",
-      email:user.email
+      // birthdate:user.birthdate || "",
+      email:user.email,
+      website:user.website,
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof profileUpdateValidation>) {}
+  async function onSubmit(values: z.infer<typeof profileUpdateValidation>) {
+    const User = await updateUser({...values, userId:user.id, imageUrl:user.imageUrl, imageId:''})
+    if(!User){
+      toast({title: 'updating Profile failed please try again'})
+    }
+    navigate(-1)
+    // console.log({User})
+  }
   const handleCancel = () => {
-    navigate("/");
+    navigate(-1);
   };
   return (
     <Form {...form}>
@@ -91,7 +103,7 @@ const EditProfileForm = () => {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="birthdate"
           render={({ field }) => (
@@ -102,8 +114,8 @@ const EditProfileForm = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}
-        />
+          )} */}
+        {/* /> */}
         <FormField
           control={form.control}
           name="email"
@@ -117,12 +129,25 @@ const EditProfileForm = () => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="body-1 text-n-3 ">Website Link</FormLabel>
+              <FormControl>
+                <Input type="text" className=" bg-n-7 border-none" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex gap-4 justify-end ">
           <Button type="button" onClick={handleCancel}>
             cancel
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={isLoadingUpdate}>{isLoadingUpdate? 'Updating' : 'Save'}</Button>
         </div>
       </form>
     </Form>

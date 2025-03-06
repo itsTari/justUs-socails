@@ -38,7 +38,7 @@ const PostForm = ({post, action}: PostFormProps) => {
         if(post && action === 'Update'){
           const updatedPost = await updatePost({...values, postId:post.$id, imageId:post.imageId, imageUrl:post.imageUrl})
           if(!updatedPost){
-            toast({title: 'please try again'})
+            toast({title: 'failed to edit post. please try again'})
           }
           return navigate(`/posts/${post.$id}`)
         }
@@ -46,7 +46,7 @@ const PostForm = ({post, action}: PostFormProps) => {
             const newPost = await createPost({...values, userId:user.id,})
             
             if(!newPost) {
-                toast({title:'please try again later'})
+                toast({title:'failed to create post. please try again later'})
             }
             navigate('/')
         console.log(values)

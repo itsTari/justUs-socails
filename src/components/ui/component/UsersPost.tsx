@@ -8,7 +8,7 @@ const UsersPost = () => {
     const {id} = useParams()
     const {data:usersPost, isPending} = useGetUsersPosts(id)
     const { data: currentUser} = useGetCurrentUser();
-    console.log({usersPost})
+    // console.log({usersPost})
   return (
     <div>
         {isPending ? <Spinner size={50} color='green'/>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import LikedPosts from "@/components/ui/component/LikedPosts"
 import UsersPost from "@/components/ui/component/UsersPost"
 import { useGetCurrentUser, useGetUserById } from "@/lib/reactQuery/Queries"
+import { formatDateString } from "@/lib/utils"
 import { useState } from "react"
 import { Link, useParams } from "react-router-dom"
 
@@ -36,11 +37,14 @@ const Profile = () => {
         <img src={profileUser?.imageUrl} alt='profile'className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-4"/>
         {isOwnProfile ? <EditButton /> : <FollowButton />}
        </div>
-       <div className="py-2">
+       <div className="py-2 leading-loose">
           <h1 className="text-[16px] font-medium leading-[140%] lg:text-[18px]">{profileUser?.name}</h1>
           <p className="text-n-4">@{profileUser?.username}</p>
+          <p className="text-n-4 text-sm">{profileUser?.email}</p>
           <p>{profileUser?.bio}</p>
+          <p>{profileUser?.website}</p>
           <p>{profileUser?.birthdate}</p>
+          <p className="text-sm flex items-center gap-2"><img src='/assets/svg/calender.svg' width={15} height={15}/>Joined {formatDateString(profileUser?.$createdAt || '')}</p>
           <div>
             <span className="text-n-3 pr-4"><span className="text-white">0</span> following</span>
             <span className="text-n-3"><span className="text-white">0</span> followers</span>
