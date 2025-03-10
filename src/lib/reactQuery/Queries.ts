@@ -173,16 +173,16 @@ export const useGetUsersPosts = (userId?: string)=>{
     })
 }
 export const useUpdateUser= ()=>{
-    // const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
     return useMutation({
-        mutationFn:(user: IUpdateUser)=> updateUser(user)
-        // onSuccess:()=>{
-        //     queryClient.invalidateQueries({
-        //         queryKey:[QUERY_KEYS.GET_CURRENT_USER]
-        //     })
-        //     queryClient.invalidateQueries({
-        //         queryKey:[QUERY_KEYS.GET_USERS]
-        //     })
-        // },
+        mutationFn:(user: IUpdateUser)=> updateUser(user),
+        onSuccess:()=>{
+            queryClient.invalidateQueries({
+                queryKey:[QUERY_KEYS.GET_CURRENT_USER]
+            })
+            queryClient.invalidateQueries({
+                queryKey:[QUERY_KEYS.GET_USERS]
+            })
+        }
     })
 }

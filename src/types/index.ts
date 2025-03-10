@@ -34,7 +34,6 @@ export type IUpdateUser ={
     username:string;
     email:string;
     bio:string;
-    // birthdate:string;
     website?: string;
     imageId:string;
     imageUrl:URL | string;

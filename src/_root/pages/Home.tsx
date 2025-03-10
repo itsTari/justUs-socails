@@ -27,11 +27,6 @@ const Home = () => {
                     ))}
                   </ul>
                 )}
-                {/* <img src={user.imageUrl} className="h-8 w-8 rounded-full"/>
-                <div>
-                  <h4 className="h4">{user.name}</h4>
-                  <p className="body-2 text-n-3">@{user.username}</p>
-                </div> */}
               </div>
             </div>
             <PostIcon/>

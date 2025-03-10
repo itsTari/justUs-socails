@@ -51,5 +51,5 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 };
 
 export const checkIsLiked = (likeArray: string[], userId: string) => {
-  return likeArray.includes(userId);
+  return likeArray?.includes(userId);
 };

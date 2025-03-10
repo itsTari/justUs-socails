@@ -41,9 +41,9 @@ const Profile = () => {
           <h1 className="text-[16px] font-medium leading-[140%] lg:text-[18px]">{profileUser?.name}</h1>
           <p className="text-n-4">@{profileUser?.username}</p>
           <p className="text-n-4 text-sm">{profileUser?.email}</p>
-          <p>{profileUser?.bio}</p>
+          <p className="text-n-2 text-sm py-1">{profileUser?.bio}</p>
           <p>{profileUser?.website}</p>
-          <p>{profileUser?.birthdate}</p>
+          {/* <p>{profileUser?.birthdate}</p> */}
           <p className="text-sm flex items-center gap-2"><img src='/assets/svg/calender.svg' width={15} height={15}/>Joined {formatDateString(profileUser?.$createdAt || '')}</p>
           <div>
             <span className="text-n-3 pr-4"><span className="text-white">0</span> following</span>

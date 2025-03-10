@@ -293,11 +293,12 @@ export async function getUsersPosts (userId?:string) {
         throw new Error("User ID is required to fetch posts");
     }
     try {
-        const usersPost = db.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersId, [Query.equal('userId', userId)] )
-        return (await usersPost).documents
+        const usersPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.equal('creator', userId)] )
+        return usersPost.documents
+    
 
     } catch (error) {
-        console.log(error)
+        console.log({error})
     }
 }
 // //updateUser in profile page

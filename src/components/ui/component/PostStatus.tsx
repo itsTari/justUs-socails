@@ -9,7 +9,7 @@ type postStatusProps = {
 }
 const PostStatus = ({post, userId}: postStatusProps) => {
   // current likes on a specific post
-  const likeArray = post.likes.map((user:Models.Document) => user.$id)
+  const likeArray = post?.likes.map((user:Models.Document) => user.$id)
 
   const [likes, setLikes] = useState(likeArray)
   const [isSave, setIsSave] = useState(false)
@@ -20,7 +20,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
   const {data : currentUser} = useGetCurrentUser()
   const {mutate:repost, isPending:isReposting} = useRepost()
 
-  const savedPostRecord = currentUser?.save.find((record:Models.Document) => record.post.$id === post.$id)
+  const savedPostRecord = currentUser?.save.find((record:Models.Document) => record.post.$id === post?.$id)
   useEffect(()=>{
       setIsSave(!!savedPostRecord)
   },[currentUser])
@@ -31,7 +31,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
     e.stopPropagation();
     e.preventDefault();
     let newLikes = [...likes]
-    const hasLiked = newLikes.includes(userId)
+    const hasLiked = newLikes?.includes(userId)
     if(hasLiked){
       newLikes = newLikes.filter((id) => id !== userId);
     }else{
@@ -39,7 +39,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
     }
 
     setLikes(newLikes)
-    likePost({postId: post.$id, likesArray: newLikes })
+    likePost({postId: post?.$id, likesArray: newLikes })
   }
 
   const handleSavePost = (e: React.MouseEvent) => {
@@ -69,7 +69,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
           onClick={(e)=> handleLikePost(e)}
            className='cursor-pointer'
           />
-          <p className='text-[14px] font-medium leading-[140%] lg:text-[16px]'>{likes.length}</p>
+          <p className='text-[14px] font-medium leading-[140%] lg:text-[16px]'>{likes?.length}</p>
       </div>
        
         {isReposting ? <div></div> :<img src='/assets/svg/repost.svg'

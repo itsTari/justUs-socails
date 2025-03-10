@@ -15,7 +15,6 @@ import { toast } from "@/hooks/use-toast";
 const EditProfileForm = () => {
   const { user } = useUserContext();
   const { mutateAsync: updateUser, isPending: isLoadingUpdate } = useUpdateUser();
-  console.log({updateUser})
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof profileUpdateValidation>>({

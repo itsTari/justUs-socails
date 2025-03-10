@@ -10,35 +10,35 @@ type postCardProps = {
 
 const PostCard = ({ post }: postCardProps) => {
   const { user } = useUserContext();
-  if (!post.creator) return;
+  if (!post.creator && !post?.originalPostId) return;
   return (
     <div className="rounded-2xl border lg:p-7 p-5 max-w-screen-sm">
       {post.originalPostId ? (
         // repost Ui
         <>
           <p>
-            <strong>Reposted by {post.userId}</strong>
+            <strong>Reposted by {post?.userId?.username}</strong>
           </p>
           {post.comment && <p>"{post.comment}"</p>}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <Link to={`/profile/${post.creator.$id}`}>
+              <Link to={`/profile/${post?.originalPostId?.creator?.$id}`}>
                 <img
-                  src={post.creator.imageUrl || ""}
+                  src={post?.originalPostId?.creator?.imageUrl || ""}
                   alt="creator"
                   className="rounded-full w-12 lg:h-12"
                 />
               </Link>
               <div className="flex flex-col">
                 <p className="text-[16px] font-medium leading-[140%] lg:text-[18px]">
-                  {post.creator.name}
+                  {post?.originalPostId?.creator?.name}
                 </p>
-                <p className="text-n-4">@{post.creator.username}</p>
+                <p className="text-n-4">@{post?.originalPostId?.creator?.username}</p>
               </div>
             </div>
             <Link
               to={`/edit-post/${post.$id}`}
-              className={`${user.id !== post.creator.$id && "hidden"}`}
+              className={`${user.id !== post?.creator?.$id && "hidden"}`}
             >
               <img src="/assets/svg/edit.svg" alt="edit" />
             </Link>
@@ -47,7 +47,7 @@ const PostCard = ({ post }: postCardProps) => {
             <div className="py-4">
               <p>{post.caption}</p>
               <ul>
-                {post.tags.map((tag: string) => (
+                {post.originalPostId?.tags?.map((tag: string) => (
                   <li key={tag} className="text-blue-400">
                     {tag}
                   </li>
@@ -55,7 +55,7 @@ const PostCard = ({ post }: postCardProps) => {
               </ul>
             </div>
             <div>
-              <img src={post.imageUrl} className="rounded-2xl" />
+              <img src={post?.originalPostId?.imageUrl} className="rounded-2xl" />
             </div>
 
             <div className="flex justify-between items-start text-n-4 py-2">
@@ -63,7 +63,7 @@ const PostCard = ({ post }: postCardProps) => {
                 {formatDateString(post.$createdAt)}
               </p>
             </div>
-            <PostStatus post={post} userId={user.id} />
+            {/* <PostStatus post={post} userId={user.id} /> */}
           </Link>
         </>
       ) : (
