@@ -159,10 +159,7 @@ export async function unSavePost(savedRecordId:string){
 
 export async function createRepost(repost:IRepost){
     try {
-        // fetch the original post 
-        // const post = await db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, postId)
-       
-        // repost to database
+        
         const res = await db.createDocument(appwriteConfig.databaseId, appwriteConfig.repostId, ID.unique(), 
         {
             userId:repost.userId,
@@ -265,18 +262,22 @@ export async function deletePost(postId:string) {
     }
 }
 // // getsaved post func api
-export async function getSavedPost () {
-    try {
-        const savedPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.savesId)
+// export async function getSavedPost (userId?:string) {
+//     if (!userId) {
+//         throw new Error("User ID is required to fetch posts");
+//     }
+//     try {
+//         const savedPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.savesId, [Query.equal('user', userId)])
+//         console.log('hello world', savedPost)
         
-        if(!savedPost || savedPost.total === 0) {
-            throw new Error("No saved posts found");
-        }
-        return savedPost
-    } catch (error) {
-        console.log(error)
-    }
-}
+//         if(!savedPost || savedPost.total === 0) {
+//             throw new Error("No saved posts found");
+//         }
+//         return savedPost.documents ?? []
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 // // profile page
 export async function getUserById(userId?: string) {
@@ -293,7 +294,7 @@ export async function getUsersPosts (userId?:string) {
         throw new Error("User ID is required to fetch posts");
     }
     try {
-        const usersPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.equal('creator', userId)] )
+        const usersPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.equal('creator', userId), Query.orderDesc('$createdAt')] )
         return usersPost.documents
     
 

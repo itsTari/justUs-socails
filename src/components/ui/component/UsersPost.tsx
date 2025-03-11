@@ -1,26 +1,74 @@
-import { useGetUsersPosts } from "@/lib/reactQuery/Queries"
+import { useGetUsersPosts } from "@/lib/reactQuery/Queries";
 import Spinner from "./Spinner";
-// import PostGrid from "./PostGrid";
-import { Models } from "appwrite";
-import { useParams } from "react-router-dom";
-import PostGrid from "./PostGrid";
+import { Link, useParams } from "react-router-dom";
+import { multiFormatDateString } from "@/lib/utils";
+import PostStatus from "./PostStatus";
+import { useUserContext } from "@/context/AuthContext";
 
 const UsersPost = () => {
-    const {id} = useParams()
-    const {data:usersPost, isPending} = useGetUsersPosts(id)
-    console.log({usersPost})
+  const { user } = useUserContext();
+  const { id } = useParams();
+  const { data: usersPost, isPending } = useGetUsersPosts(id);
+  console.log({ usersPost });
   return (
     <div>
-        {isPending ? <Spinner size={50} color='green'/>
-        :(
-            <ul className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 ">
-                {usersPost?.map((post)=>(
-                    <PostGrid key={post.$id} post={post}/>
-                ))}
-            </ul>
-        )}
-    </div>
-  )
-}
+      {isPending ? (
+        <Spinner size={50} color="green" />
+      ) : usersPost?.length === 0 ? (
+        <h1 className="text-center text-n-5 h6 md:h5">
+          You have no post.  Create posts{" "}
+        </h1>
+      ) : (
+        <ul className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 ">
+          {usersPost?.map((post) => (
+            <li key={post.$id} className="w-full">
+              <div>
+                <div className="flex items-center gap-3">
+                  <Link to={`/profile/${post.creator.$id}`}>
+                    <img
+                      src={post.creator.imageUrl || ""}
+                      alt="creator"
+                      className="rounded-full w-10 lg:h-10"
+                    />
+                  </Link>
+                  <div className="flex flex-col">
+                    <p className="text-[12px] font-medium leading-[140%] lg:text-[15px]">
+                      {post.creator.name}
+                    </p>
+                    <p className="text-n-4 text-[12px] lg:text-[15px]">
+                      @{post.creator.username}
+                    </p>
+                  </div>
+                </div>
+                <Link to={`/posts/${post.$id}`}>
+                  <div className="py-4">
+                    <p className="">{post.caption}</p>
+                    <ul>
+                      {post.tags.map((tag: string) => (
+                        <li key={tag} className="text-blue-400">
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <img src={post.imageUrl} className="rounded-2xl" />
+                  </div>
 
-export default UsersPost
+                  <div className="flex justify-between items-start text-n-4 py-2">
+                    <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px]">
+                      {multiFormatDateString(post.$createdAt)}
+                    </p>
+                  </div>
+                  <PostStatus post={post} userId={user.id} />
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default UsersPost;

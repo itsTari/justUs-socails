@@ -1,19 +1,26 @@
 import { useGetCurrentUser } from "@/lib/reactQuery/Queries";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
-import { formatDateString } from "@/lib/utils";
+import { multiFormatDateString } from "@/lib/utils";
 import { Models } from "appwrite";
+import PostStatus from "./PostStatus";
+import { useUserContext } from "@/context/AuthContext";
 
 const LikedPosts = () => {
+  const { user } = useUserContext();
   const { data: currentUser, isPending } = useGetCurrentUser();
   // console.log({ currentUser });
   return (
     <div>
       {isPending ? (
         <Spinner size={50} color="blue" />
+      ) : currentUser?.liked.length === 0 ? (
+        <h1 className="text-center text-n-5 h6 md:h5">
+          You have no liked post........... like a post and it will appear here{" "}
+        </h1>
       ) : (
         <ul className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 ">
-          {currentUser?.liked.map((post:Models.Document) => (
+          {currentUser?.liked.map((post: Models.Document) => (
             <li key={post.$id} className="w-full">
               <div>
                 <div className="flex items-center gap-3">
@@ -50,10 +57,10 @@ const LikedPosts = () => {
 
                   <div className="flex justify-between items-start text-n-4 py-2">
                     <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px]">
-                      {formatDateString(post.$createdAt)}
+                      {multiFormatDateString(post.$createdAt)}
                     </p>
                   </div>
-                  {/* <PostStatus post={post} userId={user.id} /> */}
+                  <PostStatus post={post} userId={user.id} />
                 </Link>
               </div>
             </li>
