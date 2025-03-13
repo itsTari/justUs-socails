@@ -335,7 +335,7 @@ export async function updateUser(user:IUpdateUser){
                 username:user.username,
                 bio:user.bio,
                 email:user.email,
-                // birthdate:user.birthdate,
+                dateOfBirth:user.dateOfBirth,
                 website:user.website,
                 imageUrl:image.imageUrl,
                 imageId:image.imageId

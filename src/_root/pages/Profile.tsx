@@ -42,8 +42,9 @@ const Profile = () => {
           <p className="text-n-4">@{profileUser?.username}</p>
           <p className="text-n-4 text-sm">{profileUser?.email}</p>
           <p className="text-n-2 text-sm py-1">{profileUser?.bio}</p>
-          <p>{profileUser?.website}</p>
-          <p className="text-sm flex items-center gap-2"><img src='/assets/svg/calender.svg' width={15} height={15}/>Joined {formatDateString(profileUser?.$createdAt || '')}</p>
+          <p className="text-n-3 flex items-center gap-2 text-sm"><img src="/assets/svg/party.svg" width={15} height={15}/>{profileUser?.dateOfBirth}</p>
+          <p className="text-indigo-600 flex items-center gap-2 text-md pt-1"><img src="/assets/svg/link.svg" width={15} height={15}/>{profileUser?.website}</p>
+          <p className="text-sm flex items-center gap-2 py-1"><img src='/assets/svg/calender.svg' width={15} height={15}/>Joined {formatDateString(profileUser?.$createdAt || '')}</p>
           <div>
             <span className="text-n-3 pr-4"><span className="text-white">0</span> following</span>
             <span className="text-n-3"><span className="text-white">0</span> followers</span>

@@ -24,7 +24,7 @@ const EditProfileForm = () => {
       name: user.name,
       username:user.username,
       bio: user.bio || "",
-      // birthdate:user.birthdate || "",
+      dateOfBirth:user.dateOfBirth,
       email:user.email,
       website:user.website,
     },
@@ -33,6 +33,7 @@ const EditProfileForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof profileUpdateValidation>) {
     const User = await updateUser({...values, userId:user.id, imageUrl:user.imageUrl, imageId:''})
+    console.log({User})
     if(!User){
       toast({title: 'updating Profile failed please try again'})
     }
@@ -102,19 +103,19 @@ const EditProfileForm = () => {
             </FormItem>
           )}
         />
-        {/* <FormField
+        <FormField
           control={form.control}
-          name="birthdate"
+          name="dateOfBirth"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="body-1 text-n-3 ">Birth Date</FormLabel>
               <FormControl>
-                <Input type="text" className=" bg-n-7 border-none" {...field} />
+                <Input type="date" className=" bg-n-7 border-none" {...field}  />
               </FormControl>
               <FormMessage />
             </FormItem>
-          )} */}
-        {/* /> */}
+          )} 
+         />
         <FormField
           control={form.control}
           name="email"
@@ -135,7 +136,7 @@ const EditProfileForm = () => {
             <FormItem>
               <FormLabel className="body-1 text-n-3 ">Website Link</FormLabel>
               <FormControl>
-                <Input type="text" className=" bg-n-7 border-none" {...field} />
+                <Input type="url" className=" bg-n-7 border-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

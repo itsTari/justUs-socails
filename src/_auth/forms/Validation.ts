@@ -22,7 +22,7 @@ export const SignUpValidation = z.object({
     name: z.string(),
     username: z.string().max(20, {message:'username above 20 char not accepted'}),
     bio:z.string(),
-    // birthdate:z.string(),
+    dateOfBirth:z.string().optional(),
     email:z.string().email(),
     website:z.string().optional()
   })

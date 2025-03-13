@@ -10,7 +10,7 @@ export const INITIAL_USER = {
     email:'',
     imageUrl:'',
     bio:'',
-    // birthdate:'',
+    dateOfBirth:'',
     website:'',
 }
 // to know wether we have a loggedIn user at all time
@@ -43,7 +43,7 @@ const AuthProvider = ({children}:{children:React.ReactNode}) => {
                     email:currentAccount.email,
                     imageUrl:currentAccount.imageUrl,
                     bio:currentAccount.bio,
-                    // birthdate:currentAccount.birthdate,
+                    dateOfBirth:currentAccount.dateOfBirth,
                     website:currentAccount.website,
                 })
                 setIsAuthenticated(true)

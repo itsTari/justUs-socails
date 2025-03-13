@@ -1,4 +1,4 @@
-import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useRepost, useSavePost } from '@/lib/reactQuery/Queries'
+import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useSavePost } from '@/lib/reactQuery/Queries'
 import { checkIsLiked } from '@/lib/utils'
 import { Models } from 'appwrite'
 import React, {useState, useEffect} from 'react'
@@ -19,7 +19,6 @@ const PostStatus = ({post, userId}: postStatusProps) => {
   const {mutate: savepost, isPending:isSavingPost} = useSavePost()
   const {mutate: unSavePost, isPending:isUnsavingPost} = useDeleteSavedPost()
   const {data : currentUser} = useGetCurrentUser()
-  // const {mutate:repost, isPending:isReposting} = useRepost()
 
   const savedPostRecord = currentUser?.save.find((record:Models.Document) => record.post?.$id === post.$id)
   useEffect(()=>{
@@ -55,13 +54,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
       setIsSave(true)
     }
   }
-  // const handleRePost =  (e: React.MouseEvent)  => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-    
-  //   const repostPost = repost({userId, originalPostId:post.$id, comment:'hello dear.. my own thought', timestamp:post.$createdAt})
-  //   return repostPost
-  // }
+ 
   return (
     <div className='flex justify-between items-center mt-2'>
       <div className='flex gap-1 items-center'>
