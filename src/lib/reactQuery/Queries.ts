@@ -1,5 +1,5 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import { createPost, createRepost, createUserAccount, deletePost, getCurrentUser, getPostbyId, getRecentPosts, getUserById, getUsersPosts, likePost, savedPost, signInAccount, signOutAccount, unSavePost, UpdatePost, updateUser } from '../appwrite/api'
+import { createPost, createRepost, createUserAccount, deletePost, getCurrentUser, getPostbyId, getRecentPosts, getUserById, getUsers, getUsersPosts, likePost, savedPost, signInAccount, signOutAccount, unSavePost, UpdatePost, updateUser } from '../appwrite/api'
 import { InewPost, INewUser, IRepost, IUpdatePost, IUpdateUser } from '@/types'
 import { QUERY_KEYS } from './Querieskey'
 
@@ -184,5 +184,11 @@ export const useUpdateUser= ()=>{
                 queryKey:[QUERY_KEYS.GET_USERS]
             })
         }
+    })
+}
+export const useGetUsers =()=>{
+    return useQuery({
+        queryKey:[QUERY_KEYS.GET_USERS],
+        queryFn:getUsers
     })
 }

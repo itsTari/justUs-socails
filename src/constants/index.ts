@@ -1,18 +1,9 @@
 export const links = [
-    {
-        label:'Edit post',
-        route:'/edit-post/:id',
-        imgURL:'/assets/svg/edit.svg'
-    },
+  
     {
         label:'Saved post',
         route:'/saved',
         imgURL:'/assets/svg/saved.svg'
-    },
-    {
-        label:'Liked post',
-        route:'/liked',
-        imgURL:'/assets/svg/heart.svg'
     },
     {
         label:'People',
@@ -44,6 +35,6 @@ export const bottomLinks = [
     },
     {
         icon:'/assets/svg/explore.svg',
-        route:'/create-post'
+        route:'#'
     }
 ]

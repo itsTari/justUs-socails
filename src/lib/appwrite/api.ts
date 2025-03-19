@@ -352,3 +352,13 @@ export async function updateUser(user:IUpdateUser){
         console.log("Failed to update user:", error)
     }
 }
+// get allUsers fron the database 
+export async function getUsers(){
+    try {
+        const users = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersId,  [Query.orderDesc("$createdAt")] )
+        if (!users) throw Error;
+        return users
+    } catch (error) {
+        console.log(error)
+    }
+}
