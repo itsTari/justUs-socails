@@ -165,7 +165,7 @@ export async function createRepost(repost:IRepost){
             userId:repost.userId,
             originalPostId:repost.originalPostId,
             comment:repost.comment,
-            timestamp:repost.timestamp
+            // timestamp:repost.timestamp
         })
         console.log('repost created:', res)
         if(!res) throw Error
@@ -176,25 +176,37 @@ export async function createRepost(repost:IRepost){
 
 }
 
-export async function getRecentPosts(){
-    const originalPosts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)])
-    const reposts = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.repostId, [Query.orderDesc('$createdAt')])
-    
-    const enrichedRepost = reposts.documents.map((repost)=>{
-            const originalPost = db.getDocument(appwriteConfig.databaseId, appwriteConfig.postsId, repost.origianlPostId)
-            return {...repost, originalPost}
-    })
-    if(!originalPosts) throw Error
-    if(!enrichedRepost) throw Error
-    return [...originalPosts.documents, ...enrichedRepost]
-    // const updatedPost =  [...posts.documents, ...repost.documents]
-    // return updatedPost
+export async function getRecentPosts() {
+    try {
+        // Fetch original posts sorted by newest first
+        const originalPosts = await db.listDocuments( appwriteConfig.databaseId, appwriteConfig.postsId, [Query.orderDesc('$createdAt'), Query.limit(20)]);
+
+        // Fetch reposts sorted by newest first
+        const reposts = await db.listDocuments( appwriteConfig.databaseId, appwriteConfig.repostId, [Query.orderDesc('$createdAt'), Query.limit(20)]);
+
+        // Fetch the original post details for each repost
+        const enrichedReposts = await Promise.all(
+            reposts.documents.map(async (repost) => {
+                try {
+                    const originalPost = await db.getDocument( appwriteConfig.databaseId, appwriteConfig.postsId, repost.originalPostId);
+                    return { ...repost, originalPost,   $createdAt: repost.$createdAt }; // Attach original post to repost
+                } catch (error) {
+                    console.error("Error fetching original post:", error);
+                    return { ...repost, originalPost: null,  $createdAt: repost.$createdAt }; // Handle missing posts
+                }
+            })
+        );
+
+        const allPosts = [
+            ...originalPosts.documents,
+            ...enrichedReposts
+        ].sort((a, b) => new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime());
+        return allPosts;
+    } catch (error) {
+        console.error("Error fetching recent posts:", error);
+        return []; // Return an empty array in case of failure
+    }
 }
-// export async function fetchRepost(){
-//     const originalPost = await db.listDocuments(appwriteConfig.databaseId, appwriteConfig.postsId)
-    
-//     return [...originalPost.documents, ...repost.documents]
-// }
 
 export async function getPostbyId (postId:string){
     try {

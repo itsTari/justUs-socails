@@ -58,5 +58,5 @@ export type IRepost={
     userId:string;
     originalPostId:string;
     comment?:string;
-    timestamp:string
+    // timestamp:string
 }

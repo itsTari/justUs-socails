@@ -18,7 +18,7 @@ const RepostComponent = ({ post, userId }: postStatusProps) => {
     if (!userId || !post?.$id) return;
 
     try {
-      repost({ userId, originalPostId: post.$id, comment, timestamp: post.$createdAt });
+      repost({ userId, originalPostId: post.$id, comment});
 
       toast({ title: "Reposted successfully!" });
 
@@ -38,6 +38,10 @@ const RepostComponent = ({ post, userId }: postStatusProps) => {
      e.stopPropagation();
      e.preventDefault();
      setShowCommentBox(false)
+   }
+   const stopPropergation = (e: React.MouseEvent)=>{
+      e.stopPropagation();
+      e.preventDefault();
    }
 
   return (
@@ -61,6 +65,7 @@ const RepostComponent = ({ post, userId }: postStatusProps) => {
             placeholder="Add a comment (optional)..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            onClick={stopPropergation}
           />
           <div className="flex gap-2 mt-2">
             <button
