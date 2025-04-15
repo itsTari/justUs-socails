@@ -54,6 +54,11 @@ const PostStatus = ({post, userId}: postStatusProps) => {
       setIsSave(true)
     }
   }
+  
+  const handleComment = (e :React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+  }
  
   return (
     <div className='flex justify-between items-center mt-2'>
@@ -75,7 +80,7 @@ const PostStatus = ({post, userId}: postStatusProps) => {
 
         <img src='/assets/svg/comment.svg'
          alt='comment'
-         onClick={()=> {}}
+         onClick={handleComment}
          className='cursor-pointer'
           />
         { isSavingPost || isUnsavingPost ? <div className="animate-spin w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full"></div> : <img src={`${isSave ? '/assets/svg/saved.svg' : '/assets/svg/save.svg'}`}
